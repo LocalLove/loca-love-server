@@ -17,5 +17,8 @@ allprojects {
     repositories {
         mavenCentral()
         maven("https://plugins.gradle.org/m2/")
+        jcenter()
+        maven("https://kotlin.bintray.com/kotlinx")
+        maven("https://dl.bintray.com/konform-kt/konform")
     }
 }

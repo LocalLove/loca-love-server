@@ -1,15 +1,13 @@
 package com.localove.user
 
 import com.localove.exceptions.AlreadyExistsException
-import com.localove.security.role.Role
+import com.localove.exceptions.NotFoundException
 import com.localove.security.role.RoleRepository
 import com.localove.user.entities.User
 import com.localove.user.entities.UserRepository
-import javassist.NotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.lang.IllegalArgumentException
 
 @Service
 class UserService(
@@ -26,9 +24,9 @@ class UserService(
     }
 
     fun findByLoginOrEmail(loginOrEmail: String): User {
-        return userRepository.findBySignInLogin(loginOrEmail)
+        return userRepository.findByLoginOrEmail(loginOrEmail, loginOrEmail)
             .orElseThrow {
-                NotFoundException("Wrong user login or email: $loginOrEmail")
+                NotFoundException("User with such credentials wasn't found")
             }
     }
 

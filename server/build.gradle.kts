@@ -1,20 +1,10 @@
 plugins {
     id("org.springframework.boot") version "2.4.1"
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
+    id("org.flywaydb.flyway") version "6.3.0"
     kotlin("plugin.spring") version "1.4.21"
     kotlin("plugin.allopen") version "1.3.61"
     kotlin("plugin.jpa") version "1.4.10"
-}
-
-tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
-        kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
-    }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }
 
 dependencies {
@@ -25,7 +15,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.postgresql:postgresql:42.2.14")
     implementation("org.flywaydb:flyway-core")
+    implementation("com.zaxxer:HikariCP:3.4.5")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
@@ -39,4 +32,15 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+}
+
+tasks {
+    compileKotlin {
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
+        kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
+    }
+
+    test {
+        useJUnitPlatform()
+    }
 }

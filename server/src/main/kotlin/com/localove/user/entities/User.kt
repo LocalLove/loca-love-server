@@ -19,9 +19,9 @@ class User(
 ) : Identifiable() {
     @ManyToMany
     @JoinTable(
-        name = "users_roles",
-        joinColumns = [JoinColumn(name = "user_id")],
-        inverseJoinColumns = [JoinColumn(name = "role_id")]
+        name = "UsersRoles",
+        joinColumns = [JoinColumn(name = "userId")],
+        inverseJoinColumns = [JoinColumn(name = "roleId")]
     )
     val roles: MutableSet<Role> = hashSetOf()
 }
@@ -29,8 +29,6 @@ class User(
 @Repository
 interface UserRepository: JpaRepository<User, Int> {
     fun findByLoginOrEmail(login: String, email: String): Optional<User>
-
-    fun findBySignInLogin(login: String) = findByLoginOrEmail(login, login)
 
     fun existsByEmail(email: String): Boolean
 

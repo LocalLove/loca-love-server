@@ -2,12 +2,12 @@ package com.localove.security.login
 
 import com.localove.api.Credentials
 import com.localove.api.TokenDto
+import com.localove.exceptions.NotFoundException
 import com.localove.security.jwt.JwtService
 import com.localove.security.role.Role
 import com.localove.user.UserService
 import com.localove.user.entities.User
 import com.localove.util.LoggerProperty
-import javassist.NotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

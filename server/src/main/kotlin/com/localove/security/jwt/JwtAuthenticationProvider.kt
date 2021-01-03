@@ -31,7 +31,7 @@ class UserAuthentication(
 ) : Authentication {
     override fun getPrincipal() = principal
     override fun getAuthorities(): Collection<GrantedAuthority> =
-        principal.roles.map { SimpleGrantedAuthority(it.name) }
+        principal.roles.map { SimpleGrantedAuthority(it.name.name) }
 
     override fun setAuthenticated(isAuthenticated: Boolean) {}
     override fun getName(): String = principal.login
