@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/LocaLove
-    username: LocaLove
-    password: LocaLove
+    url: jdbc:postgresql://localhost:5432/localove
+    username: localove
+    password: localove
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect
     hibernate:
