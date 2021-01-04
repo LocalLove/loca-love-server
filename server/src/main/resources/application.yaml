@@ -14,6 +14,23 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  mail:
+    host:
+      smtp.gmail.com
+    port:
+      587
+    username:
+      localove.beta@gmail.com
+    password:
+      p4$$w0rd
+    properties:
+      mail:
+        smtp:
+          auth:
+            true
+          starttls:
+            enable:
+              true
 
 loca-love:
   jwt:
