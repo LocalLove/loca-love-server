@@ -8,7 +8,8 @@ abstract class Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null
+    @Column(name = "id")
+    var id: Long? = null
 
     override fun equals(other: Any?): Boolean {
         other ?: return false
@@ -21,8 +22,15 @@ abstract class Identifiable {
             return false
         }
 
-        return this.id != null && this.id == (other as Identifiable).id
+        other as Identifiable
+
+        return this.id != null && this.id == other.id
     }
 
     override fun hashCode() = 0xCAFE
+
+    override fun toString(): String {
+        return "${javaClass.simpleName}(id=$id)"
+    }
+
 }

@@ -1,7 +1,7 @@
 package com.localove.security.jwt
 
-import com.localove.user.UserService
-import com.localove.user.entities.User
+import com.localove.security.UserService
+import com.localove.security.entities.User
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
