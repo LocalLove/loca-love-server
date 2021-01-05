@@ -11,27 +11,27 @@ import javax.persistence.*
 class Person(
 
     @Column(name = "login")
-    val login: String,
+    var login: String,
 
     @Column(name = "name")
-    val name: String,
+    var name: String,
 
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     val gender: Gender,
 
     @Column(name = "birth_date")
-    val birthDate: LocalDate,
+    var birthDate: LocalDate,
 
     @Column(name = "status")
-    val status: String,
+    var status: String = "",
 
     @Column(name = "bio")
-    val bio: String,
+    var bio: String = "",
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "avatar_id")
-    val avatar: Photo
+    var avatar: Photo? = null
 
 ) : Identifiable() {
 
@@ -39,6 +39,10 @@ class Person(
         MALE,
         FEMALE
     }
+
+    @OneToMany(mappedBy = "owner")
+    @OrderBy("last_update_time DESC")
+    val photos: MutableList<Photo> = mutableListOf()
 
     @ManyToMany(
         cascade = [CascadeType.PERSIST, CascadeType.MERGE],
@@ -50,9 +54,6 @@ class Person(
         inverseJoinColumns = [JoinColumn(name = "liked_user_id")]
     )
     val likedPersons: MutableSet<Person> = hashSetOf()
-
-    @ManyToMany(mappedBy = "likedPersons")
-    val likedByPersons: MutableSet<Person> = hashSetOf()
 
 }
 
