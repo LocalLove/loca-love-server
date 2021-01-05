@@ -5,7 +5,7 @@ enum class Gender {
     FEMALE
 }
 
-data class Profile (
+data class Profile(
     val id: Long,
     val age: Int,
     val login: String,
@@ -14,5 +14,5 @@ data class Profile (
     val status: String?,
     val bio: String?,
     val isLiked: Boolean,
-    val pictureIds: Set<Long>
+    val pictureIds: List<Long>
 )
