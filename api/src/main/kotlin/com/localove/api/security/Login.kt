@@ -1,4 +1,4 @@
-package com.localove.api
+package com.localove.api.security
 
 data class Credentials(
     val login: String,
