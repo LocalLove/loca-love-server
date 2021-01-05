@@ -1,6 +1,7 @@
 package com.localove.entities
 
 import com.localove.Identifiable
+import com.localove.api.user.Gender
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
@@ -35,11 +36,6 @@ class Person(
 
 ) : Identifiable() {
 
-    enum class Gender {
-        MALE,
-        FEMALE
-    }
-
     @OneToMany(mappedBy = "owner")
     @OrderBy("last_update_time DESC")
     val photos: MutableList<Photo> = mutableListOf()
@@ -58,4 +54,4 @@ class Person(
 }
 
 @Repository
-interface PersonRepository: JpaRepository<Person, Long>
+interface PersonRepository : JpaRepository<Person, Long>

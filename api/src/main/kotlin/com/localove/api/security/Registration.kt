@@ -1,19 +1,13 @@
-package com.localove.api
+package com.localove.api.security
 
-import com.fasterxml.jackson.annotation.JsonFormat
+import com.localove.api.user.Gender
 import java.time.LocalDate
-
-enum class Gender {
-    MALE,
-    FEMALE
-}
 
 data class UserRegistrationDto(
     val login: String,
     val email: String,
     val password: String,
     val name: String,
-    @JsonFormat(pattern = "dd/MM/yyyy")
     val dateOfBirth: LocalDate,
     val gender: Gender
 )

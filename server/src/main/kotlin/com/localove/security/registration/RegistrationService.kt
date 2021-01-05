@@ -1,6 +1,6 @@
 package com.localove.security.registration
 
-import com.localove.api.UserRegistrationDto
+import com.localove.api.security.UserRegistrationDto
 import com.localove.security.UserService
 import com.localove.security.entities.User
 import org.springframework.stereotype.Service

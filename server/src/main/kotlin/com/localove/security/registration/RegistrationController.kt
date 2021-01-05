@@ -1,6 +1,6 @@
 package com.localove.security.registration
 
-import com.localove.api.UserRegistrationDto
+import com.localove.api.security.UserRegistrationDto
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
