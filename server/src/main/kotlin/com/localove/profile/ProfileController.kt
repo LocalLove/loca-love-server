@@ -48,7 +48,7 @@ class ProfileController(
         }
     }
 
-    @PostMapping("/edit-password")
+    @PostMapping("/edit/password")
     fun editPassword(@RequestBody newPasswordDto: NewPasswordDto): ResponseEntity<*> {
         return if (passwordValidation.isValid(newPasswordDto)) {
             return try {
