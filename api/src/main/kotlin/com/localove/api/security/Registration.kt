@@ -8,6 +8,6 @@ data class UserRegistrationDto(
     val email: String,
     val password: String,
     val name: String,
-    val dateOfBirth: LocalDate,
+    val birthDate: LocalDate,
     val gender: Gender
 )

@@ -51,13 +51,10 @@ class UserService(
 
         user.apply {
             password = passwordEncoder.encode(password)
-            // TODO: расскоментить когда добавим логику почты
-//            val unconfirmedRole = roleRepository
-//                .findByName(Role.Name.UNCONFIRMED)
-//                .orElseThrow {
-//                    IllegalArgumentException("DB doesn't contain predefined role: UNCONFIRMED")
-//                }
-//            roles.add(unconfirmedRole)
+            val unconfirmedRole = roleRepository
+                .findByName(Role.Name.UNCONFIRMED) ?:
+                throw IllegalArgumentException("DB doesn't contain predefined role: UNCONFIRMED")
+            roles.add(unconfirmedRole)
             userRepository.save(this)
         }
     }
