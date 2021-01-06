@@ -1,8 +1,10 @@
 package com.localove.security.entities
 
 import com.localove.Identifiable
+import com.localove.api.user.Gender
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 import java.util.*
 import javax.persistence.*
 
@@ -14,14 +16,20 @@ class User(
     val name: String,
 
     @Column(name = "email")
-    val email: String,
+    var email: String,
 
     @Column(name = "login")
-    val login: String,
+    var login: String,
 
     @Column(name = "password")
-    var password: String
+    var password: String,
 
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    val gender: Gender,
+
+    @Column(name = "birth_date")
+    var birthDate: LocalDate
 ) : Identifiable() {
 
     @ManyToMany(
@@ -38,7 +46,7 @@ class User(
 }
 
 @Repository
-interface UserRepository: JpaRepository<User, Long> {
+interface UserRepository : JpaRepository<User, Long> {
     fun findByLoginOrEmail(login: String, email: String): Optional<User>
 
     fun existsByEmail(email: String): Boolean
