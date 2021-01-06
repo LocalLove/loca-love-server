@@ -38,7 +38,6 @@ class PictureService(
         changeProfilePhoto(picture.id!!)
     }
 
-    @Transactional
     fun getPicture(pictureId: Long): Picture {
         return pictureRepository
             .findById(pictureId)
@@ -66,9 +65,9 @@ class PictureService(
 
     private fun getPictureAndCheckOwnership(pictureId: Long): Picture {
         val picture = getPicture(pictureId)
-        val currentUser = personService.getCurrentPerson()
+        val currentPerson = personService.getCurrentPerson()
 
-        if (picture.owner != currentUser) {
+        if (picture.owner != currentPerson) {
             throw AccessDeniedException("Current user doesn't own specified picture")
         }
 
