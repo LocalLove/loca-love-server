@@ -15,7 +15,7 @@ class Picture(
     val owner: Person,
 
     @Column(name = "last_update_time")
-    val lastUpdateTime: LocalDateTime,
+    var lastUpdateTime: LocalDateTime,
 
     @Column(name = "type")
     val type: String,

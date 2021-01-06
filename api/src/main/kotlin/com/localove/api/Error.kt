@@ -9,7 +9,8 @@ enum class ErrorType {
     LOGIN_EXIST,
     EMAIL_EXIST,
     WRONG_PASSWORD,
-    INVALID_USER
+    INVALID_USER,
+    LAST_PICTURE_DELETION
 }
 
 data class ErrorDto(

@@ -1,6 +1,8 @@
 package com.localove.pictures
 
 import com.localove.api.ErrorType
+import com.localove.exceptions.AccessDeniedException
+import com.localove.exceptions.LastPictureDeletionException
 import com.localove.exceptions.NotFoundException
 import com.localove.exceptions.UnsupportedTypeException
 import com.localove.util.Response
@@ -46,4 +48,31 @@ class PictureController(
             Response.error(ErrorType.NOT_FOUND, exc.localizedMessage)
         }
     }
+
+    @DeleteMapping("/{pictureId}")
+    fun deletePicture(@PathVariable pictureId: Long): ResponseEntity<*> {
+        return try {
+            pictureService.deletePicture(pictureId)
+            Response.ok()
+        } catch (exc: NotFoundException) {
+            Response.error(ErrorType.NOT_FOUND, exc.localizedMessage)
+        } catch (exc: AccessDeniedException) {
+            Response.error(ErrorType.ACCESS_DENIED, exc.localizedMessage)
+        } catch (exc: LastPictureDeletionException) {
+            Response.error(ErrorType.LAST_PICTURE_DELETION, exc.localizedMessage)
+        }
+    }
+
+    @PutMapping("/avatar/{pictureId}")
+    fun changeProfilePhoto(@PathVariable pictureId: Long): ResponseEntity<*> {
+        return try {
+            pictureService.changeProfilePhoto(pictureId)
+            Response.ok()
+        } catch (exc: NotFoundException) {
+            Response.error(ErrorType.NOT_FOUND, exc.localizedMessage)
+        } catch (exc: AccessDeniedException) {
+            Response.error(ErrorType.ACCESS_DENIED, exc.localizedMessage)
+        }
+    }
+
 }

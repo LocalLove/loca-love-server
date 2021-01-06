@@ -9,13 +9,13 @@ import com.localove.api.user.ProfileCard
 import com.localove.entities.Person
 import com.localove.exceptions.InvalidTokenException
 import com.localove.exceptions.InvalidUserException
+import com.localove.exceptions.NotFoundException
 import com.localove.exceptions.WrongPasswordException
 import com.localove.security.UserService
 import com.localove.util.Response
 import com.localove.util.Validations
 import com.localove.util.isValid
 import io.konform.validation.Validation
-import javassist.NotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
