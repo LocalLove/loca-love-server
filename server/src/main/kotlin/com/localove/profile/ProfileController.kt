@@ -2,6 +2,7 @@ package com.localove.profile
 
 import com.localove.api.ErrorType
 import com.localove.api.user.Profile
+import com.localove.api.user.ProfileCard
 import com.localove.entities.Person
 import com.localove.util.Response
 import javassist.NotFoundException
@@ -26,6 +27,15 @@ class ProfileController(
         }
     }
 
+    @GetMapping("/{userId}/card")
+    fun getProfileCard(@PathVariable userId: Long): ResponseEntity<*>{
+        return try{
+            Response.ok(personService.getPerson(userId).toProfileCard())
+        }catch (exc: NotFoundException){
+            Response.error(ErrorType.NOT_FOUND, "User with such id not found")
+        }
+    }
+
     fun Person.toProfile() = Profile(
         id = id!!,
         age = birthDate.until(LocalDate.now()).years,
@@ -36,5 +46,14 @@ class ProfileController(
         isLiked = personService.isLikedByCurrentUser(this),
         bio = bio,
         pictureIds = photos.map { it.id!! }
+    )
+
+    fun Person.toProfileCard() = ProfileCard(
+        id = id!!,
+        age = birthDate.until(LocalDate.now()).years,
+        name = name,
+        gender = gender,
+        status = status,
+        avatarId = avatar?.id!!
     )
 }
