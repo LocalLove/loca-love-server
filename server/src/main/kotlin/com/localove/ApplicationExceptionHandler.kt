@@ -3,6 +3,7 @@ package com.localove
 import com.localove.api.ErrorDto
 import com.localove.api.ErrorType
 import com.localove.exceptions.NotFoundException
+import com.localove.exceptions.WrongPasswordException
 import com.localove.util.LoggerProperty
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -23,20 +24,28 @@ class ApplicationExceptionHandler {
 
     @ExceptionHandler(HttpMessageConversionException::class)
     fun handleConversionError(exc: HttpMessageConversionException): ResponseEntity<ErrorDto> {
-        logger.error("HttpMessageConversionException: '${exc.localizedMessage}'")
+        logger.error(defaultErrorMessage(exc))
         return ResponseEntity(ErrorDto(ErrorType.VALIDATION_ERROR,"Wrong data"), HttpStatus.BAD_REQUEST)
     }
 
     // TODO
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleConversionError(exc: IllegalArgumentException): ResponseEntity<ErrorDto> {
-        logger.error("IllegalArgumentException: '${exc.localizedMessage}'")
+        logger.error(defaultErrorMessage(exc))
         return ResponseEntity(ErrorDto(ErrorType.VALIDATION_ERROR, exc.localizedMessage), HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(MissingServletRequestParameterException::class)
     fun handleRequestParameterError(exc: MissingServletRequestParameterException): ResponseEntity<ErrorDto> {
-        logger.error("MissingServletRequestParameterException: '${exc.localizedMessage}'")
+        logger.error(defaultErrorMessage(exc))
         return ResponseEntity(ErrorDto(ErrorType.VALIDATION_ERROR, exc.localizedMessage), HttpStatus.BAD_REQUEST)
     }
+
+    @ExceptionHandler(WrongPasswordException::class)
+    fun handleWrongPassword(exc: WrongPasswordException): ResponseEntity<ErrorDto> {
+        logger.error(defaultErrorMessage(exc))
+        return ResponseEntity(ErrorDto(ErrorType.WRONG_PASSWORD, exc.localizedMessage), HttpStatus.BAD_REQUEST)
+    }
+
+    private fun defaultErrorMessage(exc: Exception): String = "${exc::class.simpleName}: '${exc.localizedMessage}'"
 }

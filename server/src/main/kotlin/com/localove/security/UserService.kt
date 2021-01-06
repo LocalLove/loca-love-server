@@ -5,6 +5,7 @@ import com.localove.exceptions.NotFoundException
 import com.localove.security.entities.RoleRepository
 import com.localove.security.entities.User
 import com.localove.security.entities.UserRepository
+import com.localove.security.jwt.JwtAuthentication
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -52,4 +53,11 @@ class UserService(
             userRepository.save(this)
         }
     }
+
+    fun checkPassword(oldPassword: String): JwtAuthentication {
+        return if (passwordEncoder.matches(oldPassword, ))
+    }
+
+    @Transactional
+    fun editPassword()
 }
