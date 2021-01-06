@@ -13,7 +13,7 @@ class EmailChangeToken(
     @Column(name = "email")
     val email: String
 
-): EmailToken()
+): Token()
 
 interface EmailChangeTokenRepository: JpaRepository<EmailChangeToken, Long> {
     fun findByValue(value: UUID): EmailChangeToken?

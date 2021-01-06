@@ -1,6 +1,6 @@
 package com.localove.security
 
-import com.localove.security.entities.EmailToken
+import com.localove.security.entities.Token
 import com.localove.security.entities.User
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.jpa.repository.JpaRepository
@@ -19,7 +19,7 @@ class TokenService(
     private val duration: Duration
 ) {
     @Transactional
-    fun <T : EmailToken> fillToken(tokenRepository: JpaRepository<T, Long>, user: User, token: T): T {
+    fun <T : Token> fillToken(tokenRepository: JpaRepository<T, Long>, user: User, token: T): T {
         token.apply {
             this.user = user
             value = UUID.randomUUID()
