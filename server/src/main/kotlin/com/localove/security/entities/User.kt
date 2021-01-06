@@ -14,10 +14,10 @@ class User(
     val name: String,
 
     @Column(name = "email")
-    val email: String,
+    var email: String,
 
     @Column(name = "login")
-    val login: String,
+    var login: String,
 
     @Column(name = "password")
     var password: String
