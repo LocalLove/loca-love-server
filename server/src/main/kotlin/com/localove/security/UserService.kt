@@ -64,7 +64,7 @@ class UserService(
     @Transactional
     fun editEmail(newEmail: String) {
         val currentUser = getCurrentUser()
-        if (!userRepository.existsByEmail(newEmail)) {
+        if (userRepository.existsByEmail(newEmail)) {
             val token = EmailChangeToken(newEmail)
             tokenService.fillToken(emailChangeTokenRepository, currentUser, token)
 
