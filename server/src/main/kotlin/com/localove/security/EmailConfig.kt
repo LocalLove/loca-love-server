@@ -1,9 +1,9 @@
 package com.localove.security
 
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
+import org.springframework.context.annotation.Configuration
 
-@Component
+@Configuration
 class EmailConfig(
     @Value("\${email.email-confirmation-url}")
     val emailConfirmationUrl: String,
