@@ -40,6 +40,9 @@ loca-love:
     supported-types:
       - image/png
       - image/jpeg
+  email-tokens:
+    expiration: 7d
+
 
 email:
   #Временно
