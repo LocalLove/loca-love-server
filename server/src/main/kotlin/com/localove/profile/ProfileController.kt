@@ -72,6 +72,16 @@ class ProfileController(
         }
     }
 
+    @PostMapping("/{userId}/like")
+    fun likeUser(@PathVariable userId: Long): ResponseEntity<*> {
+        return try {
+            personService.likeUser(userId)
+            Response.ok()
+        } catch (exc: NotFoundException) {
+            Response.error(ErrorType.NOT_FOUND, "User with such id not found")
+        }
+    }
+
     fun Person.toProfile() = Profile(
         id = id!!,
         age = birthDate.until(LocalDate.now()).years,
@@ -79,7 +89,7 @@ class ProfileController(
         name = name,
         gender = gender,
         status = status,
-        isLiked = personService.isLikedByCurrentUser(this),
+        isLiked = personService.isLikedByCurrentPerson(this),
         bio = bio,
         pictureIds = photos.map { it.id!! }
     )

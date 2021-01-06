@@ -5,6 +5,7 @@ import com.localove.entities.PersonRepository
 import com.localove.exceptions.NotFoundException
 import com.localove.security.AuthorizedUserInfo
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class PersonService(
@@ -20,8 +21,20 @@ class PersonService(
 
     fun getCurrentPerson() = getPerson(AuthorizedUserInfo.getPrincipal().id!!)
 
-    fun isLikedByCurrentUser(person: Person): Boolean {
+    fun isLikedByCurrentPerson(person: Person): Boolean {
         val currentPerson = getCurrentPerson()
         return currentPerson.likedPersons.contains(person)
     }
+
+    @Transactional
+    fun likeUser(userId: Long) {
+        val currentPerson = getCurrentPerson()
+        val otherPerson = getPerson(userId)
+        if (currentPerson.likedPersons.contains(otherPerson)) {
+            currentPerson.likedPersons.remove(otherPerson)
+        } else {
+            currentPerson.likedPersons.add(otherPerson)
+        }
+    }
+
 }
