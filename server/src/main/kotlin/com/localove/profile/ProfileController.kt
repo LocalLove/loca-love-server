@@ -8,6 +8,7 @@ import com.localove.api.user.Profile
 import com.localove.api.user.ProfileCard
 import com.localove.entities.Person
 import com.localove.exceptions.InvalidTokenException
+import com.localove.exceptions.InvalidUserException
 import com.localove.exceptions.WrongPasswordException
 import com.localove.security.UserService
 import com.localove.util.Response
@@ -79,6 +80,8 @@ class ProfileController(
             Response.ok()
         } catch (exc: NotFoundException) {
             Response.error(ErrorType.NOT_FOUND, "User with such id not found")
+        } catch (exc: InvalidUserException) {
+            Response.error(ErrorType.INVALID_USER, exc.localizedMessage)
         }
     }
 
