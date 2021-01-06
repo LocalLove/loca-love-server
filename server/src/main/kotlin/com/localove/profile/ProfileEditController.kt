@@ -1,6 +1,7 @@
 package com.localove.profile
 
 import com.localove.api.ErrorType
+import com.localove.api.edit.BaseProfileEditDto
 import com.localove.api.edit.EmailDto
 import com.localove.api.edit.NewPasswordDto
 import com.localove.api.edit.PasswordDto
@@ -13,15 +14,14 @@ import com.localove.util.Response
 import com.localove.util.Validations
 import com.localove.util.throwIfNotValid
 import io.konform.validation.Validation
+import javassist.NotFoundException
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class ProfileEditController(
-    private val userService: UserService
+    private val userService: UserService,
+    private val personService: PersonService
 ) {
     private val passwordValidation = Validation<NewPasswordDto> {
         NewPasswordDto::password {
@@ -59,6 +59,16 @@ class ProfileEditController(
             Response.ok()
         } catch (exc: InvalidTokenException) {
             Response.error(ErrorType.INVALID_TOKEN, exc.localizedMessage)
+        }
+    }
+
+    @PutMapping("/edit")
+    fun baseEditProfile(@RequestBody editProfileDto: BaseProfileEditDto): ResponseEntity<*> {
+        return try {
+            personService.editProfile(editProfileDto)
+            Response.ok()
+        } catch (exc: NotFoundException) {
+            Response.error(ErrorType.NOT_FOUND, "User with such id not found")
         }
     }
 
