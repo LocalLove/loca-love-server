@@ -24,5 +24,7 @@ private fun UserRegistrationDto.toUser() = User(
     name = name,
     login = login,
     email = email,
-    password = password
+    password = password,
+    gender = gender,
+    birthDate = dateOfBirth
 )
