@@ -94,7 +94,7 @@ class ProfileController(
         status = status,
         isLiked = personService.isLikedByCurrentPerson(this),
         bio = bio,
-        pictureIds = photos.map { it.id!! }
+        pictureIds = pictures.map { it.id!! }
     )
 
     fun Person.toProfileCard() = ProfileCard(

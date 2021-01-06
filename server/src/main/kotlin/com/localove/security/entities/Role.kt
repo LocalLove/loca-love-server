@@ -16,8 +16,8 @@ class Role(
 
     enum class Name {
         USER,
-        UNCONFIRMED,
-        NEWBIE
+        NEWCOMER,
+        UNCONFIRMED
     }
 
 }
