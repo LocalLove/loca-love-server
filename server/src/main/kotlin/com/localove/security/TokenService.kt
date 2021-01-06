@@ -29,7 +29,7 @@ class TokenService(
     }
 
     @Transactional
-    fun <R : TokenRepository> validateToken(tokenRepository: R, token: String): User {
+    fun <R : TokenRepository<*>> validateToken(tokenRepository: R, token: String): User {
         val tokenValue = uuidFromString(token) ?: throw InvalidTokenException()
         val emailToken = tokenRepository.findByValue(tokenValue) ?: throw InvalidTokenException()
         val tokenLifetime = Duration.between(emailToken.creationTime, LocalDateTime.now())

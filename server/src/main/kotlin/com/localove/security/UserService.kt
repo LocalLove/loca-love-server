@@ -10,6 +10,7 @@ import com.localove.security.jwt.JwtService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 class UserService(
@@ -92,5 +93,14 @@ class UserService(
         } else {
             throw InvalidTokenException()
         }
+    }
+
+    @Transactional
+    fun confirmNewEmail(token: String) {
+        tokenService.validateToken(emailChangeTokenRepository, token)
+        val newEmail = emailChangeTokenRepository.findByValue(
+            UUID.fromString(token)
+        )!!.email
+        getCurrentUser().email = newEmail
     }
 }
