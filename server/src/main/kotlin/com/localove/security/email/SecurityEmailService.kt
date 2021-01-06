@@ -32,7 +32,7 @@ class SecurityEmailService(
 
         val template = ResourceLoader.loadAsString(emailConfirmationTemplateFilePath)
         val substitutions = mapOf(
-            "url" to emailConfirmationUrl, "name" to email, "uuid" to token
+            "url" to emailConfirmationUrl, "name" to email, "token" to token
         )
         val body = templateResolver.resolve(template, substitutions)
 
@@ -44,7 +44,7 @@ class SecurityEmailService(
 
         val template = ResourceLoader.loadAsString(passwordRestoreTemplateFilePath)
         val substitutions = mapOf(
-            "url" to passwordRestoreUrl, "name" to email, "uuid" to token
+            "url" to passwordRestoreUrl, "name" to email, "token" to token
         )
         val body = templateResolver.resolve(template, substitutions)
 
