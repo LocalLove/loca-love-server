@@ -1,5 +1,6 @@
 package com.localove.security.email
 
+import com.localove.exceptions.InvalidTokenException
 import com.localove.security.entities.EmailToken
 import com.localove.security.entities.EmailTokenRepository
 import com.localove.security.entities.User
@@ -26,12 +27,12 @@ internal class EmailTokenService(
 
     @Transactional
     fun validateToken(token: String): User {
-        val tokenValue = uuidFromString(token) ?: throw InvalidEmailTokenException()
-        val emailToken = emailTokenRepository.findByValue(tokenValue) ?: throw EmailTokenNotFoundException()
+        val tokenValue = uuidFromString(token) ?: throw InvalidTokenException()
+        val emailToken = emailTokenRepository.findByValue(tokenValue) ?: throw InvalidTokenException()
         val tokenLifetime = Duration.between(emailToken.creationTime, LocalDateTime.now())
 
         if (tokenLifetime >= tokenExpirationTime) {
-            throw EmailTokenExpiredException()
+            throw InvalidTokenException()
         }
 
         return emailToken.user
@@ -46,9 +47,3 @@ private fun uuidFromString(src: String): UUID? {
         null
     }
 }
-
-internal class InvalidEmailTokenException: RuntimeException("Invalid email token")
-
-internal class EmailTokenNotFoundException: RuntimeException("Specified email token does not exist")
-
-internal class EmailTokenExpiredException: RuntimeException("Invalid token")
