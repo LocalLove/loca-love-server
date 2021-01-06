@@ -39,6 +39,9 @@ class ProfileController(
         }
     }
 
+    @PostMapping("/edit-email")
+
+
     @PostMapping("/check-password")
     fun checkPassword(@RequestBody passwordDto: PasswordDto): ResponseEntity<*> {
         return try {
