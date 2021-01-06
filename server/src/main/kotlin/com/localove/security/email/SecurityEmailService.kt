@@ -1,7 +1,6 @@
 package com.localove.security.email
 
 import com.localove.email.EmailService
-import com.localove.security.EmailConfig
 import com.localove.util.LoggerProperty
 import com.localove.util.ResourceLoader
 import org.springframework.stereotype.Service
