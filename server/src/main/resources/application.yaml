@@ -14,8 +14,16 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 16MB
+      max-request-size: 16MB
 
 loca-love:
   jwt:
     secret: passssssssssssssssssssssswordddddddddddd
     expiration: 3h
+  pictures:
+    supported-types:
+      - image/png
+      - image/jpeg

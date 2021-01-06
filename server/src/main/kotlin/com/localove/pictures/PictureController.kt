@@ -1,13 +1,12 @@
 package com.localove.pictures
 
 import com.localove.api.ErrorType
+import com.localove.exceptions.NotFoundException
 import com.localove.exceptions.UnsupportedTypeException
 import com.localove.util.Response
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestPart
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
@@ -30,6 +29,21 @@ class PictureController(
             Response.ok()
         } catch (exc: UnsupportedTypeException) {
             Response.error(ErrorType.VALIDATION_ERROR, exc.localizedMessage)
+        }
+    }
+
+    @GetMapping("/{pictureId}")
+    fun getPicture(
+        @PathVariable pictureId: Long
+    ): ResponseEntity<*> {
+        return try {
+            val picture = pictureService.getPicture(pictureId)
+            Response.okWithContentType(
+                picture.bytes,
+                MediaType.valueOf(picture.type)
+            )
+        } catch (exc: NotFoundException) {
+            Response.error(ErrorType.NOT_FOUND, exc.localizedMessage)
         }
     }
 }

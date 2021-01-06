@@ -40,7 +40,11 @@ tasks {
         kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
         kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
     }
-
+    flyway {
+        url = "jdbc:postgresql://localhost:5432/localove"
+        user = "localove"
+        password = "localove"
+    }
     test {
         useJUnitPlatform()
     }
