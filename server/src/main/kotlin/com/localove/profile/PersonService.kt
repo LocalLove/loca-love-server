@@ -7,6 +7,7 @@ import com.localove.exceptions.InvalidUserException
 import com.localove.exceptions.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import kotlin.reflect.KMutableProperty0
 
 @Service
@@ -49,6 +50,7 @@ class PersonService(
         currentPerson.likedPersons.add(otherPerson)
     }
 
+    @Transactional
     fun editProfile(editProfileDto: BaseProfileEditDto) {
         val person = getCurrentPerson()
 
@@ -63,5 +65,4 @@ class PersonService(
         newValue?.let {
             propertyToUpdate.setter.call(newValue)
         }
-
 }
