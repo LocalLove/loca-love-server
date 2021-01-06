@@ -5,6 +5,7 @@ import com.localove.api.edit.NewPasswordDto
 import com.localove.api.edit.PasswordDto
 import com.localove.api.security.TokenDto
 import com.localove.api.user.Profile
+import com.localove.api.user.ProfileCard
 import com.localove.entities.Person
 import com.localove.exceptions.InvalidTokenException
 import com.localove.exceptions.WrongPasswordException
@@ -35,6 +36,15 @@ class ProfileController(
         return try {
             Response.ok(personService.getPerson(userId).toProfile())
         } catch (exc: NotFoundException) {
+            Response.error(ErrorType.NOT_FOUND, "User with such id not found")
+        }
+    }
+
+    @GetMapping("/{userId}/card")
+    fun getProfileCard(@PathVariable userId: Long): ResponseEntity<*>{
+        return try{
+            Response.ok(personService.getPerson(userId).toProfileCard())
+        }catch (exc: NotFoundException){
             Response.error(ErrorType.NOT_FOUND, "User with such id not found")
         }
     }
@@ -72,6 +82,15 @@ class ProfileController(
         isLiked = personService.isLikedByCurrentUser(this),
         bio = bio,
         pictureIds = photos.map { it.id!! }
+    )
+
+    fun Person.toProfileCard() = ProfileCard(
+        id = id!!,
+        age = birthDate.until(LocalDate.now()).years,
+        name = name,
+        gender = gender,
+        status = status,
+        avatarId = avatar?.id!!
     )
 }
 
