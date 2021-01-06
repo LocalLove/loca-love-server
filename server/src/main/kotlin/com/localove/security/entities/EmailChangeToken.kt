@@ -14,4 +14,4 @@ class EmailChangeToken(
 
 ): Token()
 
-interface EmailChangeTokenRepository: TokenRepository, JpaRepository<EmailChangeToken, Long>
+interface EmailChangeTokenRepository: TokenRepository<EmailChangeToken>, JpaRepository<EmailChangeToken, Long>

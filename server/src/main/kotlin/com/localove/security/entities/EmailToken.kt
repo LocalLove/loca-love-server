@@ -8,4 +8,4 @@ import javax.persistence.Table
 @Table(name = "email_tokens")
 class EmailToken: Token()
 
-interface EmailTokenRepository: TokenRepository, JpaRepository<EmailToken, Long>
+interface EmailTokenRepository: TokenRepository<EmailToken>, JpaRepository<EmailToken, Long>

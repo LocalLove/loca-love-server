@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-open class Token: Identifiable() {
+open class Token : Identifiable() {
     @Column(name = "value")
     lateinit var value: UUID
 
@@ -21,6 +21,6 @@ open class Token: Identifiable() {
     lateinit var creationTime: LocalDateTime
 }
 
-interface TokenRepository {
-    fun findByValue(value: UUID): Token?
+interface TokenRepository<T : Token> {
+    fun findByValue(value: UUID): T?
 }
