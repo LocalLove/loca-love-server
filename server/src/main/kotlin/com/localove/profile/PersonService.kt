@@ -18,10 +18,10 @@ class PersonService(
             }
     }
 
+    fun getCurrentPerson() = getPerson(AuthorizedUserInfo.getPrincipal().id!!)
+
     fun isLikedByCurrentUser(person: Person): Boolean {
-        val currentPerson = getPerson(
-            AuthorizedUserInfo.getPrincipal().id!!
-        )
+        val currentPerson = getCurrentPerson()
         return currentPerson.likedPersons.contains(person)
     }
 }
