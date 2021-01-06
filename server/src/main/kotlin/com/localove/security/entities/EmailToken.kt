@@ -8,7 +8,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "email_tokens")
-internal class EmailToken(
+open class EmailToken(
 
     @Column(name = "value")
     val value: UUID,
