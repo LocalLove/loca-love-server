@@ -1,9 +1,9 @@
 package com.localove.security
 
 import com.localove.exceptions.AlreadyExistsException
+import com.localove.exceptions.InvalidTokenException
 import com.localove.exceptions.NotFoundException
 import com.localove.exceptions.WrongPasswordException
-import com.localove.exceptions.WrongTokenException
 import com.localove.security.entities.RoleRepository
 import com.localove.security.entities.User
 import com.localove.security.entities.UserRepository
@@ -75,7 +75,7 @@ class UserService(
         if (userId == currentUser.id) {
             currentUser.password = passwordEncoder.encode(newPassword)
         } else {
-            throw WrongTokenException()
+            throw InvalidTokenException()
         }
     }
 }

@@ -3,7 +3,7 @@ package com.localove.api
 enum class ErrorType {
     VALIDATION_ERROR,
     WRONG_CREDENTIALS,
-    WRONG_TOKEN,
+    INVALID_TOKEN,
     NOT_FOUND,
     ACCESS_DENIED,
     LOGIN_EXIST,

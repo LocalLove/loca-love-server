@@ -6,8 +6,8 @@ import com.localove.api.edit.PasswordDto
 import com.localove.api.security.TokenDto
 import com.localove.api.user.Profile
 import com.localove.entities.Person
+import com.localove.exceptions.InvalidTokenException
 import com.localove.exceptions.WrongPasswordException
-import com.localove.exceptions.WrongTokenException
 import com.localove.security.UserService
 import com.localove.util.Response
 import com.localove.util.Validations
@@ -57,8 +57,8 @@ class ProfileController(
         return try {
             userService.editPassword(newPasswordDto.password, newPasswordDto.token)
             Response.ok()
-        } catch (exc: WrongTokenException) {
-            Response.error(ErrorType.WRONG_TOKEN, exc.localizedMessage)
+        } catch (exc: InvalidTokenException) {
+            Response.error(ErrorType.INVALID_TOKEN, exc.localizedMessage)
         }
     }
 
