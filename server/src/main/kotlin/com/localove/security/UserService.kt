@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class UserService(
     private val jwtService: JwtService,
+    private val tokenService: TokenService,
     private val emailService: SecurityEmailService,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
@@ -64,8 +65,10 @@ class UserService(
     fun editEmail(newEmail: String) {
         val currentUser = getCurrentUser()
         if (!userRepository.existsByEmail(newEmail)) {
-            val token = EmailChangeToken()
-            emailService.sendEmailConfirmation(newEmail, )
+            val token = EmailChangeToken(newEmail)
+            tokenService.fillToken(emailChangeTokenRepository, currentUser, token)
+
+            emailService.sendEmailConfirmation(newEmail, token.value)
         } else {
             throw AlreadyExistsException(AlreadyExistsException.Property.EMAIL)
         }
