@@ -3,6 +3,7 @@ package com.localove.profile
 import com.localove.api.ErrorType
 import com.localove.api.edit.NewPasswordDto
 import com.localove.api.edit.PasswordDto
+import com.localove.api.security.TokenDto
 import com.localove.api.user.Profile
 import com.localove.entities.Person
 import com.localove.exceptions.WrongPasswordException
@@ -41,7 +42,7 @@ class ProfileController(
     @PostMapping("/check-password")
     fun checkPassword(@RequestBody passwordDto: PasswordDto): ResponseEntity<*> {
         return try {
-            Response.ok(userService.checkPassword(passwordDto.password))
+            Response.ok(TokenDto(userService.checkPassword(passwordDto.password)))
         } catch (exc: WrongPasswordException) {
             Response.error(ErrorType.NOT_FOUND, exc.localizedMessage)
         }

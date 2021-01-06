@@ -3,8 +3,6 @@ package com.localove.util
 import io.konform.validation.Invalid
 import io.konform.validation.Valid
 import io.konform.validation.Validation
-import io.konform.validation.jsonschema.maxLength
-import io.konform.validation.jsonschema.minLength
 import io.konform.validation.jsonschema.pattern
 
 fun <T> Validation<T>.isValid(o: T): Boolean =
@@ -17,9 +15,7 @@ class Validations {
 
     companion object {
         val passwordValidation = Validation<String> {
-            minLength(8)
-            maxLength(100)
-            pattern("^(?=.*?[A-Za-z])(?=.*?[0-9])(?=*?[!@_.])\$")
+            pattern("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!@_.]{8,100}\$")
         }
     }
 }
