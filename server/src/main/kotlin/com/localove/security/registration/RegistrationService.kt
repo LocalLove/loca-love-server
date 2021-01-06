@@ -1,13 +1,10 @@
 package com.localove.security.registration
 
-import com.localove.api.security.UserRegistrationDto
 import com.localove.security.RoleManagementService
-import com.localove.security.TokenService
 import com.localove.security.TokenService
 import com.localove.security.UserService
 import com.localove.security.email.SecurityEmailService
 import com.localove.security.entities.EmailToken
-import com.localove.security.entities.EmailTokenRepository
 import com.localove.security.entities.EmailTokenRepository
 import com.localove.security.entities.Role
 import com.localove.security.entities.User
@@ -18,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 internal class RegistrationService(
     private val userService: UserService,
     private val tokenService: TokenService,
+    private val emailService: SecurityEmailService,
     private val roleManagementService: RoleManagementService,
     private val emailTokenRepository: EmailTokenRepository
 ) {
