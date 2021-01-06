@@ -27,7 +27,7 @@ class UserService(
             }
     }
 
-    fun getCurrentUser(): User = findById(AuthorizedUserInfo.getPrincipal().id!!)
+    fun getCurrentUser(): User = AuthorizedUserInfo.getPrincipal()
 
     fun findByLoginOrEmail(loginOrEmail: String): User {
         return userRepository.findByLoginOrEmail(loginOrEmail, loginOrEmail)
