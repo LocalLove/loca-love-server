@@ -62,7 +62,7 @@ class ProfileEditController(
         }
     }
 
-    @PutMapping("/edit")
+    @PutMapping("user/edit")
     fun baseEditProfile(@RequestBody editProfileDto: BaseProfileEditDto): ResponseEntity<*> {
         return try {
             personService.editProfile(editProfileDto)
