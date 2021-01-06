@@ -1,10 +1,10 @@
-package com.localove.user
+package com.localove.security
 
 import com.localove.exceptions.AlreadyExistsException
 import com.localove.exceptions.NotFoundException
-import com.localove.security.role.RoleRepository
-import com.localove.user.entities.User
-import com.localove.user.entities.UserRepository
+import com.localove.security.entities.RoleRepository
+import com.localove.security.entities.User
+import com.localove.security.entities.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,7 +15,7 @@ class UserService(
     private val passwordEncoder: PasswordEncoder,
     private val roleRepository: RoleRepository
 ) {
-    fun findById(id: Int): User {
+    fun findById(id: Long): User {
         return userRepository
             .findById(id)
             .orElseThrow {

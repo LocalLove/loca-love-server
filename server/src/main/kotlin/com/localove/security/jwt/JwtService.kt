@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 import java.time.Clock
 import java.util.*
 
-data class JwtPayload(val userId: Int)
+data class JwtPayload(val userId: Long)
 
 @Component
 class JwtService(
@@ -23,7 +23,7 @@ class JwtService(
         return parser.parseClaimsJwt(token).body
     }
 
-    fun generateToken(userId: Int): String {
+    fun generateToken(userId: Long): String {
         return Jwts.builder().apply {
             setSubject(userId.toString())
             clock.millis().let {
@@ -37,7 +37,7 @@ class JwtService(
     fun getPayload(token: String): JwtPayload {
         // без валидации, т.к. parseClaimsJwt это делает за нас
         return JwtPayload(
-            parseClaims(token).subject.toInt()
+            parseClaims(token).subject.toLong()
         )
     }
 }
