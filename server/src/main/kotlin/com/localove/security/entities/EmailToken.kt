@@ -9,6 +9,6 @@ import javax.persistence.Table
 @Table(name = "email_tokens")
 class EmailToken: Token()
 
-internal interface EmailTokenRepository: JpaRepository<EmailToken, Long> {
+interface EmailTokenRepository: JpaRepository<EmailToken, Long> {
     fun findByValue(value: UUID): EmailToken?
 }
