@@ -37,7 +37,7 @@ loca-love:
     secret: passssssssssssssssssssssswordddddddddddd
     expiration: 3h
   email-tokens:
-    expiration: 14d
+    expiration: 7d
 
 
 email:

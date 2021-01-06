@@ -25,28 +25,18 @@ internal class EmailTokenService(
         )
 
     @Transactional
-    fun validateToken(token: String): EmailTokenValidationResult {
-        val tokenValue = uuidFromString(token)
-            ?: return EmailTokenValidationResult.InvalidToken
-
-        val emailToken = emailTokenRepository.findByValue(tokenValue)
-            ?: return EmailTokenValidationResult.TokenNotFound
+    fun validateToken(token: String): User {
+        val tokenValue = uuidFromString(token) ?: throw InvalidEmailTokenException()
+        val emailToken = emailTokenRepository.findByValue(tokenValue) ?: throw EmailTokenNotFoundException()
         val tokenLifetime = Duration.between(emailToken.creationTime, LocalDateTime.now())
 
-        return if (tokenLifetime < tokenExpirationTime){
-            EmailTokenValidationResult.Success(emailToken.user)
-        } else{
-            EmailTokenValidationResult.TokenExpired
+        if (tokenLifetime >= tokenExpirationTime) {
+            throw EmailTokenExpiredException()
         }
+
+        return emailToken.user
     }
 
-}
-
-internal sealed class EmailTokenValidationResult {
-    class Success(val user: User): EmailTokenValidationResult()
-    object InvalidToken: EmailTokenValidationResult()
-    object TokenNotFound: EmailTokenValidationResult()
-    object TokenExpired: EmailTokenValidationResult()
 }
 
 private fun uuidFromString(src: String): UUID? {
@@ -56,3 +46,9 @@ private fun uuidFromString(src: String): UUID? {
         null
     }
 }
+
+internal class InvalidEmailTokenException: RuntimeException("Invalid email token")
+
+internal class EmailTokenNotFoundException: RuntimeException("Specified email token does not exist")
+
+internal class EmailTokenExpiredException: RuntimeException("Invalid token")
