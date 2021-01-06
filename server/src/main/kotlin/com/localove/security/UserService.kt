@@ -71,7 +71,7 @@ class UserService(
     @Transactional
     fun editPassword(newPassword: String, token: String) {
         val currentUser = getCurrentUser()
-        val userId = jwtService.parseClaims(token).subject.toLong()
+        val userId = jwtService.getPayload(token).userId
         if (userId == currentUser.id) {
             currentUser.password = passwordEncoder.encode(newPassword)
         } else {

@@ -50,15 +50,15 @@ class ProfileController(
 
     @PostMapping("/edit/password")
     fun editPassword(@RequestBody newPasswordDto: NewPasswordDto): ResponseEntity<*> {
-        return if (passwordValidation.isValid(newPasswordDto)) {
-            return try {
-                userService.editPassword(newPasswordDto.password, newPasswordDto.token)
-                Response.ok()
-            } catch (exc: WrongTokenException) {
-                Response.error(ErrorType.WRONG_TOKEN, exc.localizedMessage)
-            }
-        } else {
+        if (!passwordValidation.isValid(newPasswordDto)) {
             Response.error(ErrorType.VALIDATION_ERROR, "Invalid password")
+        }
+
+        return try {
+            userService.editPassword(newPasswordDto.password, newPasswordDto.token)
+            Response.ok()
+        } catch (exc: WrongTokenException) {
+            Response.error(ErrorType.WRONG_TOKEN, exc.localizedMessage)
         }
     }
 
