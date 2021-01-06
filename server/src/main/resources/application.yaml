@@ -36,6 +36,9 @@ loca-love:
   jwt:
     secret: passssssssssssssssssssssswordddddddddddd
     expiration: 3h
+  email-tokens:
+    expiration: 14d
+
 
 email:
   #Временно
