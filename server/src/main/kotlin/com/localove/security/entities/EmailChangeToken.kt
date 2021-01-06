@@ -1,7 +1,6 @@
 package com.localove.security.entities
 
 import org.springframework.data.jpa.repository.JpaRepository
-import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -15,6 +14,4 @@ class EmailChangeToken(
 
 ): Token()
 
-interface EmailChangeTokenRepository: JpaRepository<EmailChangeToken, Long> {
-    fun findByValue(value: UUID): EmailChangeToken?
-}
+interface EmailChangeTokenRepository: TokenRepository, JpaRepository<EmailChangeToken, Long>

@@ -20,3 +20,7 @@ open class Token: Identifiable() {
     @Column(name = "creation_time")
     lateinit var creationTime: LocalDateTime
 }
+
+interface TokenRepository {
+    fun findByValue(value: UUID): Token?
+}
