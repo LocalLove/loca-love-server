@@ -6,10 +6,11 @@ import com.localove.api.edit.NewPasswordDto
 import com.localove.api.edit.PasswordDto
 import com.localove.api.security.TokenDto
 import com.localove.api.user.Profile
+import com.localove.api.user.ProfileCard
 import com.localove.entities.Person
 import com.localove.exceptions.AlreadyExistsException
+import com.localove.exceptions.InvalidTokenException
 import com.localove.exceptions.WrongPasswordException
-import com.localove.exceptions.WrongTokenException
 import com.localove.security.UserService
 import com.localove.util.Response
 import com.localove.util.Validations
@@ -41,6 +42,15 @@ class ProfileController(
         }
     }
 
+    @GetMapping("/{userId}/card")
+    fun getProfileCard(@PathVariable userId: Long): ResponseEntity<*>{
+        return try{
+            Response.ok(personService.getPerson(userId).toProfileCard())
+        }catch (exc: NotFoundException){
+            Response.error(ErrorType.NOT_FOUND, "User with such id not found")
+        }
+    }
+
     @PostMapping("/edit/email")
     fun editEmail(@RequestBody emailDto: EmailDto): ResponseEntity<*> {
         return try {
@@ -61,17 +71,17 @@ class ProfileController(
         }
     }
 
-    @PostMapping("/edit-password")
+    @PostMapping("/edit/password")
     fun editPassword(@RequestBody newPasswordDto: NewPasswordDto): ResponseEntity<*> {
-        return if (passwordValidation.isValid(newPasswordDto)) {
-            return try {
-                userService.editPassword(newPasswordDto.password, newPasswordDto.token)
-                Response.ok()
-            } catch (exc: WrongTokenException) {
-                Response.error(ErrorType.WRONG_TOKEN, exc.localizedMessage)
-            }
-        } else {
+        if (!passwordValidation.isValid(newPasswordDto)) {
             Response.error(ErrorType.VALIDATION_ERROR, "Invalid password")
+        }
+
+        return try {
+            userService.editPassword(newPasswordDto.password, newPasswordDto.token)
+            Response.ok()
+        } catch (exc: InvalidTokenException) {
+            Response.error(ErrorType.INVALID_TOKEN, exc.localizedMessage)
         }
     }
 
@@ -85,6 +95,15 @@ class ProfileController(
         isLiked = personService.isLikedByCurrentUser(this),
         bio = bio,
         pictureIds = pictures.map { it.id!! }
+    )
+
+    fun Person.toProfileCard() = ProfileCard(
+        id = id!!,
+        age = birthDate.until(LocalDate.now()).years,
+        name = name,
+        gender = gender,
+        status = status,
+        avatarId = avatar?.id!!
     )
 }
 
