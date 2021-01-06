@@ -8,6 +8,7 @@ import com.localove.api.user.Profile
 import com.localove.api.user.ProfileCard
 import com.localove.entities.Person
 import com.localove.exceptions.InvalidTokenException
+import com.localove.exceptions.InvalidUserException
 import com.localove.exceptions.WrongPasswordException
 import com.localove.security.UserService
 import com.localove.util.Response
@@ -72,6 +73,18 @@ class ProfileController(
         }
     }
 
+    @PostMapping("/{userId}/like")
+    fun likeUser(@PathVariable userId: Long): ResponseEntity<*> {
+        return try {
+            personService.likeUser(userId)
+            Response.ok()
+        } catch (exc: NotFoundException) {
+            Response.error(ErrorType.NOT_FOUND, "User with such id not found")
+        } catch (exc: InvalidUserException) {
+            Response.error(ErrorType.INVALID_USER, exc.localizedMessage)
+        }
+    }
+
     fun Person.toProfile() = Profile(
         id = id!!,
         age = birthDate.until(LocalDate.now()).years,
@@ -79,7 +92,7 @@ class ProfileController(
         name = name,
         gender = gender,
         status = status,
-        isLiked = personService.isLikedByCurrentUser(this),
+        isLiked = personService.isLikedByCurrentPerson(this),
         bio = bio,
         pictureIds = pictures.map { it.id!! }
     )
