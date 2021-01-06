@@ -19,9 +19,9 @@ class SecurityEmailService(
     fun sendEmailConfirmation(email: String, uuid: UUID) {
         log.trace("Trying to send email confirmation message to $email")
 
-        val template = ResourceLoader.loadAsString(config.emailConfirmationTemplateFilePath!!)
+        val template = ResourceLoader.loadAsString(config.emailConfirmationTemplateFilePath)
         val substitutions = mapOf(
-            "url" to config.emailConfirmationUrl!!, "name" to email, "uuid" to uuid.toString()
+            "url" to config.emailConfirmationUrl, "name" to email, "uuid" to uuid.toString()
         )
         val body = templateResolver.resolve(template, substitutions)
 
@@ -31,9 +31,9 @@ class SecurityEmailService(
     fun sendPasswordRestore(email: String, uuid: UUID) {
         log.trace("Trying to send password restore message to $email")
 
-        val template = ResourceLoader.loadAsString(config.passwordRestoreTemplateFilePath!!)
+        val template = ResourceLoader.loadAsString(config.passwordRestoreTemplateFilePath)
         val substitutions = mapOf(
-            "url" to config.passwordRestoreUrl!!, "name" to email, "uuid" to uuid.toString()
+            "url" to config.passwordRestoreUrl, "name" to email, "uuid" to uuid.toString()
         )
         val body = templateResolver.resolve(template, substitutions)
 
