@@ -27,24 +27,24 @@ class SecurityEmailService(
 
     private val log by LoggerProperty()
 
-    fun sendEmailConfirmation(email: String, uuid: UUID) {
+    fun sendEmailConfirmation(email: String, token: String) {
         log.trace("Trying to send email confirmation message to $email")
 
         val template = ResourceLoader.loadAsString(emailConfirmationTemplateFilePath)
         val substitutions = mapOf(
-            "url" to emailConfirmationUrl, "name" to email, "uuid" to uuid.toString()
+            "url" to emailConfirmationUrl, "name" to email, "uuid" to token
         )
         val body = templateResolver.resolve(template, substitutions)
 
         emailService.sendMessage(email, "Подтверждение почты", body)
     }
 
-    fun sendPasswordRestore(email: String, uuid: UUID) {
+    fun sendPasswordRestore(email: String, token: String) {
         log.trace("Trying to send password restore message to $email")
 
         val template = ResourceLoader.loadAsString(passwordRestoreTemplateFilePath)
         val substitutions = mapOf(
-            "url" to passwordRestoreUrl, "name" to email, "uuid" to uuid.toString()
+            "url" to passwordRestoreUrl, "name" to email, "uuid" to token
         )
         val body = templateResolver.resolve(template, substitutions)
 
