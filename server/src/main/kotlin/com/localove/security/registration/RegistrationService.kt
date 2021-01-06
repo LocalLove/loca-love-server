@@ -2,8 +2,9 @@ package com.localove.security.registration
 
 import com.localove.api.security.UserRegistrationDto
 import com.localove.security.RoleManagementService
+import com.localove.security.TokenService
 import com.localove.security.UserService
-import com.localove.security.email.EmailTokenService
+import com.localove.security.entities.EmailTokenRepository
 import com.localove.security.entities.Role
 import com.localove.security.entities.User
 import org.springframework.stereotype.Service
@@ -12,8 +13,9 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 internal class RegistrationService(
     private val userService: UserService,
-    private val emailTokenService: EmailTokenService,
-    private val roleManagementService: RoleManagementService
+    private val tokenService: TokenService,
+    private val roleManagementService: RoleManagementService,
+    private val emailTokenRepository: EmailTokenRepository
 ) {
     @Transactional
     fun signUp(user: UserRegistrationDto) {
@@ -25,7 +27,7 @@ internal class RegistrationService(
 
     @Transactional
     fun confirmEmail(token: String) {
-        val user = emailTokenService.validateToken(token)
+        val user = tokenService.validateToken(emailTokenRepository, token)
         roleManagementService.removeRoleFromUser(user.id!!, Role.Name.UNCONFIRMED)
         roleManagementService.addRoleToUser(user.id!!, Role.Name.NEWCOMER)
     }

@@ -19,33 +19,27 @@ spring:
       max-file-size: 16MB
       max-request-size: 16MB
   mail:
-    host:
-      smtp.gmail.com
-    port:
-      587
-    username:
-      localove.beta@gmail.com
-    password:
-      p4$$w0rd
+    host: smtp.gmail.com
+    port: 587
+    username: localove.beta@gmail.com
+    password: p4$$w0rd
     properties:
       mail:
         smtp:
-          auth:
-            true
+          auth: true
           starttls:
-            enable:
-              true
+            enable: true
 
 loca-love:
   jwt:
     secret: passssssssssssssssssssssswordddddddddddd
     expiration: 3h
+  token:
+    expiration: 7d
   pictures:
     supported-types:
       - image/png
       - image/jpeg
-  email-tokens:
-    expiration: 7d
 
 
 email:

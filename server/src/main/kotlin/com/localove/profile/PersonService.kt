@@ -6,6 +6,7 @@ import com.localove.exceptions.InvalidUserException
 import com.localove.exceptions.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.IllegalArgumentException
 
 @Service
 class PersonService(
