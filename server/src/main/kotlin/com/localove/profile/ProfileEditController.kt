@@ -11,7 +11,7 @@ import com.localove.exceptions.WrongPasswordException
 import com.localove.security.UserService
 import com.localove.util.Response
 import com.localove.util.Validations
-import com.localove.util.isValid
+import com.localove.util.throwIfNotValid
 import io.konform.validation.Validation
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -31,9 +31,7 @@ class ProfileEditController(
 
     @PostMapping("user/edit/password")
     fun editPassword(@RequestBody newPasswordDto: NewPasswordDto): ResponseEntity<*> {
-        if (!passwordValidation.isValid(newPasswordDto)) {
-            Response.error(ErrorType.VALIDATION_ERROR, "Invalid password")
-        }
+        passwordValidation.throwIfNotValid(newPasswordDto)
 
         return try {
             userService.editPassword(newPasswordDto.password, newPasswordDto.token)
