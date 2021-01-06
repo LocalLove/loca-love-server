@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
+private const val MIN_PICTURES_NUMBER = 1
+
 @Service
 class PictureService(
     private val pictureRepository: PictureRepository,
@@ -56,7 +58,7 @@ class PictureService(
     @Transactional
     fun deletePicture(pictureId: Long) {
         val picture = getPictureAndCheckOwnership(pictureId)
-        if (picture.owner.pictures.size <= 1) {
+        if (picture.owner.pictures.size <= MIN_PICTURES_NUMBER) {
             throw LastPictureDeletionException("Specified photo is the last one owned by current user")
         }
 
