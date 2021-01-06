@@ -8,16 +8,21 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "photos")
-class Photo(
+class Picture(
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     val owner: Person,
 
     @Column(name = "last_update_time")
-    val lastUpdateTime: LocalDateTime
+    val lastUpdateTime: LocalDateTime,
 
+    @Column(name = "type")
+    val type: String,
+
+    @Column(name = "bytes")
+    val bytes: ByteArray
 ) : Identifiable()
 
 @Repository
-interface PhotoRepository: JpaRepository<Photo, Long>
+interface PictureRepository : JpaRepository<Picture, Long>
