@@ -56,6 +56,6 @@ class Person(
 
 @Repository
 interface PersonRepository : JpaRepository<Person, Long> {
-    @Query("select p from Person p where p.id = ?#{principal.id}")
+    @Query("select p from Person p where p.id = ?#{principal?.id}")
     fun findCurrentUser(): Person?
 }
