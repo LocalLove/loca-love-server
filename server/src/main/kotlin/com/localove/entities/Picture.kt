@@ -8,7 +8,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "photos")
-class Photo(
+class Picture(
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -25,4 +25,4 @@ class Photo(
 ) : Identifiable()
 
 @Repository
-interface PhotoRepository: JpaRepository<Photo, Long>
+interface PictureRepository : JpaRepository<Picture, Long>

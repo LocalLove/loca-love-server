@@ -5,6 +5,7 @@ import com.localove.entities.PersonRepository
 import com.localove.exceptions.NotFoundException
 import com.localove.security.AuthorizedUserInfo
 import org.springframework.stereotype.Service
+import java.lang.IllegalArgumentException
 
 @Service
 class PersonService(
@@ -16,6 +17,11 @@ class PersonService(
             .orElseThrow {
                 NotFoundException("Wrong user id: $userId")
             }
+    }
+
+    fun getCurrentPerson(): Person {
+        return personRepository.findCurrentUser()
+            ?: throw IllegalArgumentException("Not authorized")
     }
 
     fun isLikedByCurrentUser(person: Person): Boolean {

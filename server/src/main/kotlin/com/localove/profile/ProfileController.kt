@@ -35,6 +35,6 @@ class ProfileController(
         status = status,
         isLiked = personService.isLikedByCurrentUser(this),
         bio = bio,
-        pictureIds = photos.map { it.id!! }
+        pictureIds = pictures.map { it.id!! }
     )
 }

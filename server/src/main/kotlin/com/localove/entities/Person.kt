@@ -3,6 +3,7 @@ package com.localove.entities
 import com.localove.Identifiable
 import com.localove.api.user.Gender
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
 import javax.persistence.*
@@ -32,13 +33,13 @@ class Person(
 
     @OneToOne
     @JoinColumn(name = "avatar_id")
-    var avatar: Photo? = null
+    var avatar: Picture? = null
 
 ) : Identifiable() {
 
     @OneToMany(mappedBy = "owner")
     @OrderBy("last_update_time DESC")
-    val photos: MutableList<Photo> = mutableListOf()
+    val pictures: MutableList<Picture> = mutableListOf()
 
     @ManyToMany(
         cascade = [CascadeType.PERSIST, CascadeType.MERGE],
@@ -54,4 +55,7 @@ class Person(
 }
 
 @Repository
-interface PersonRepository : JpaRepository<Person, Long>
+interface PersonRepository : JpaRepository<Person, Long> {
+    @Query("select p from Person p where p.id = ?#{principal.id}")
+    fun findCurrentUser(): Person?
+}
