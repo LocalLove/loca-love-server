@@ -35,13 +35,11 @@ loca-love:
     secret: passssssssssssssssssssssswordddddddddddd
     expiration: 3h
   token:
-    expiration: 2d
+    expiration: 7d
   pictures:
     supported-types:
       - image/png
       - image/jpeg
-  email-tokens:
-    expiration: 7d
 
 
 email:
