@@ -24,7 +24,7 @@ class PersonService(
             ?: throw IllegalArgumentException("Not authorized")
     }
 
-    fun isLikedByCurrentUser(person: Person): Boolean {
+    fun isLikedByCurrentPerson(person: Person): Boolean {
         return getCurrentPerson()
             .likedPersons
             .contains(person)
