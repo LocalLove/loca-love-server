@@ -5,7 +5,6 @@ import org.springframework.util.FileCopyUtils
 import java.io.InputStreamReader
 
 class ResourceLoader {
-
     companion object {
         fun loadAsString(templatePath: String): String {
             val resource = ClassPathResource(templatePath)

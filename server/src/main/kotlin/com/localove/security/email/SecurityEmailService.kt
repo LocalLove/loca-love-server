@@ -23,7 +23,6 @@ class SecurityEmailService(
     @Value("\${email.templates.password-restore-template-file-path}")
     private val passwordRestoreTemplateFilePath: String
 ) {
-
     private val templateResolver = MessageTemplateResolver("{", "}")
 
     private val log by LoggerProperty()
@@ -58,7 +57,6 @@ private class MessageTemplateResolver(
 
     private val postfix: String = ""
 ) {
-
     fun resolve(template: String, substitutions: Map<String, String>): String =
         substitutions.entries.fold(template) {
                 acc, (argName, value) -> acc.replace(getPlaceholderRegex(argName), value)
