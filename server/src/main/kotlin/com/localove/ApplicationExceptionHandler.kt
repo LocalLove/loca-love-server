@@ -1,6 +1,7 @@
 package com.localove
 
 import com.localove.api.ErrorDto
+import com.localove.api.ErrorType
 import com.localove.exceptions.NotFoundException
 import com.localove.util.LoggerProperty
 import org.springframework.http.HttpStatus
@@ -17,24 +18,25 @@ class ApplicationExceptionHandler {
     @ExceptionHandler(NotFoundException::class)
     fun handleNotFound(exc: NotFoundException): ResponseEntity<ErrorDto> {
         logger.error("NoDataFoundException: '${exc.localizedMessage}'")
-        return ResponseEntity(ErrorDto(exc.localizedMessage), HttpStatus.NOT_FOUND)
+        return ResponseEntity(ErrorDto(ErrorType.NOT_FOUND, exc.localizedMessage), HttpStatus.NOT_FOUND)
     }
 
     @ExceptionHandler(HttpMessageConversionException::class)
     fun handleConversionError(exc: HttpMessageConversionException): ResponseEntity<ErrorDto> {
         logger.error("HttpMessageConversionException: '${exc.localizedMessage}'")
-        return ResponseEntity(ErrorDto("Wrong data"), HttpStatus.BAD_REQUEST)
+        return ResponseEntity(ErrorDto(ErrorType.VALIDATION_ERROR,"Wrong data"), HttpStatus.BAD_REQUEST)
     }
 
+    // TODO
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleConversionError(exc: IllegalArgumentException): ResponseEntity<ErrorDto> {
         logger.error("IllegalArgumentException: '${exc.localizedMessage}'")
-        return ResponseEntity(ErrorDto(exc.localizedMessage), HttpStatus.BAD_REQUEST)
+        return ResponseEntity(ErrorDto(ErrorType.VALIDATION_ERROR, exc.localizedMessage), HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(MissingServletRequestParameterException::class)
     fun handleRequestParameterError(exc: MissingServletRequestParameterException): ResponseEntity<ErrorDto> {
         logger.error("MissingServletRequestParameterException: '${exc.localizedMessage}'")
-        return ResponseEntity(ErrorDto(exc.localizedMessage), HttpStatus.BAD_REQUEST)
+        return ResponseEntity(ErrorDto(ErrorType.VALIDATION_ERROR, exc.localizedMessage), HttpStatus.BAD_REQUEST)
     }
 }
