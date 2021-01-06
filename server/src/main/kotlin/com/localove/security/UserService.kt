@@ -4,9 +4,8 @@ import com.localove.exceptions.AlreadyExistsException
 import com.localove.exceptions.InvalidTokenException
 import com.localove.exceptions.NotFoundException
 import com.localove.exceptions.WrongPasswordException
-import com.localove.security.entities.RoleRepository
-import com.localove.security.entities.User
-import com.localove.security.entities.UserRepository
+import com.localove.security.email.SecurityEmailService
+import com.localove.security.entities.*
 import com.localove.security.jwt.JwtService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -15,9 +14,12 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class UserService(
     private val jwtService: JwtService,
+    private val tokenService: TokenService,
+    private val emailService: SecurityEmailService,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val roleRepository: RoleRepository
+    private val roleRepository: RoleRepository,
+    private val emailChangeTokenRepository: EmailChangeTokenRepository
 ) {
     fun findById(id: Long): User {
         return userRepository
@@ -56,6 +58,19 @@ class UserService(
 //                }
 //            roles.add(unconfirmedRole)
             userRepository.save(this)
+        }
+    }
+
+    @Transactional
+    fun editEmail(newEmail: String) {
+        val currentUser = getCurrentUser()
+        if (userRepository.existsByEmail(newEmail)) {
+            val token = EmailChangeToken(newEmail)
+            tokenService.fillToken(emailChangeTokenRepository, currentUser, token)
+
+            emailService.sendEmailConfirmation(newEmail, token.value)
+        } else {
+            throw AlreadyExistsException(AlreadyExistsException.Property.EMAIL)
         }
     }
 

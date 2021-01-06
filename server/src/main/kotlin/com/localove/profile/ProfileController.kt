@@ -1,12 +1,14 @@
 package com.localove.profile
 
 import com.localove.api.ErrorType
+import com.localove.api.edit.EmailDto
 import com.localove.api.edit.NewPasswordDto
 import com.localove.api.edit.PasswordDto
 import com.localove.api.security.TokenDto
 import com.localove.api.user.Profile
 import com.localove.api.user.ProfileCard
 import com.localove.entities.Person
+import com.localove.exceptions.AlreadyExistsException
 import com.localove.exceptions.InvalidTokenException
 import com.localove.exceptions.InvalidUserException
 import com.localove.exceptions.WrongPasswordException
@@ -49,6 +51,17 @@ class ProfileController(
             Response.error(ErrorType.NOT_FOUND, "User with such id not found")
         }
     }
+
+    @PostMapping("/edit/email")
+    fun editEmail(@RequestBody emailDto: EmailDto): ResponseEntity<*> {
+        return try {
+            userService.editEmail(emailDto.email)
+            Response.ok()
+        } catch (exc: AlreadyExistsException) {
+            Response.error(ErrorType.EMAIL_EXIST, exc.localizedMessage)
+        }
+    }
+
 
     @PostMapping("/check-password")
     fun checkPassword(@RequestBody passwordDto: PasswordDto): ResponseEntity<*> {
