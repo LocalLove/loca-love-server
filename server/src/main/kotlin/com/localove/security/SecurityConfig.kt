@@ -40,6 +40,8 @@ class SecurityConfig(
             .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .antMatchers("/user/**").authenticated()
+            .antMatchers("/pictures/**").authenticated()
 //            .antMatchers("/profile").hasAuthority("DEFAULT")
 //            .antMatchers("/api/**").hasAuthority("DEFAULT")
 //            .antMatchers("/api/v1/users/**").hasAuthority("ADMIN")

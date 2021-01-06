@@ -13,6 +13,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.security:spring-security-data")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.postgresql:postgresql:42.2.14")
@@ -28,6 +29,8 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
 
+    implementation("io.konform:konform-jvm:0.2.0")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 
@@ -39,7 +42,11 @@ tasks {
         kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
         kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
     }
-
+    flyway {
+        url = "jdbc:postgresql://localhost:5432/localove"
+        user = "localove"
+        password = "localove"
+    }
     test {
         useJUnitPlatform()
     }

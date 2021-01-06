@@ -14,8 +14,43 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 16MB
+      max-request-size: 16MB
+  mail:
+    host:
+      smtp.gmail.com
+    port:
+      587
+    username:
+      localove.beta@gmail.com
+    password:
+      p4$$w0rd
+    properties:
+      mail:
+        smtp:
+          auth:
+            true
+          starttls:
+            enable:
+              true
 
 loca-love:
   jwt:
     secret: passssssssssssssssssssssswordddddddddddd
     expiration: 3h
+  pictures:
+    supported-types:
+      - image/png
+      - image/jpeg
+  email-tokens:
+    expiration: 7d
+
+
+email:
+  #Временно
+  email-confirmation-url: http://example.org/
+  password-restore-url: http://example.org/
+  email-confirmation-template-file-path: /static/templates/emailConfirmationMessage
+  password-restore-template-file-path: /static/templates/passwordRestoreMessage
