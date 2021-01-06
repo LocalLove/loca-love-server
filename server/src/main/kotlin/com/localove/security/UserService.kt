@@ -1,16 +1,20 @@
 package com.localove.security
 
 import com.localove.exceptions.AlreadyExistsException
+import com.localove.exceptions.InvalidTokenException
 import com.localove.exceptions.NotFoundException
+import com.localove.exceptions.WrongPasswordException
 import com.localove.security.entities.RoleRepository
 import com.localove.security.entities.User
 import com.localove.security.entities.UserRepository
+import com.localove.security.jwt.JwtService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserService(
+    private val jwtService: JwtService,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val roleRepository: RoleRepository
@@ -22,6 +26,8 @@ class UserService(
                 NotFoundException("Wrong user id: $id")
             }
     }
+
+    fun getCurrentUser(): User = AuthorizedUserInfo.getPrincipal()
 
     fun findByLoginOrEmail(loginOrEmail: String): User {
         return userRepository.findByLoginOrEmail(loginOrEmail, loginOrEmail)
@@ -50,6 +56,26 @@ class UserService(
 //                }
 //            roles.add(unconfirmedRole)
             userRepository.save(this)
+        }
+    }
+
+    fun checkPassword(oldPassword: String): String {
+        val currentUser = getCurrentUser()
+        return if (passwordEncoder.matches(oldPassword, currentUser.password)) {
+            jwtService.generateToken(currentUser.id!!)
+        } else {
+            throw WrongPasswordException()
+        }
+    }
+
+    @Transactional
+    fun editPassword(newPassword: String, token: String) {
+        val currentUser = getCurrentUser()
+        val userId = jwtService.getPayload(token).userId
+        if (userId == currentUser.id) {
+            currentUser.password = passwordEncoder.encode(newPassword)
+        } else {
+            throw InvalidTokenException()
         }
     }
 }

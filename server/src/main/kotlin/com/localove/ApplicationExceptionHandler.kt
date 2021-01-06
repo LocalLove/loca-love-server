@@ -23,20 +23,22 @@ class ApplicationExceptionHandler {
 
     @ExceptionHandler(HttpMessageConversionException::class)
     fun handleConversionError(exc: HttpMessageConversionException): ResponseEntity<ErrorDto> {
-        logger.error("HttpMessageConversionException: '${exc.localizedMessage}'")
+        logger.error(defaultErrorMessage(exc))
         return ResponseEntity(ErrorDto(ErrorType.VALIDATION_ERROR,"Wrong data"), HttpStatus.BAD_REQUEST)
     }
 
     // TODO
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleConversionError(exc: IllegalArgumentException): ResponseEntity<ErrorDto> {
-        logger.error("IllegalArgumentException: '${exc.localizedMessage}'")
+        logger.error(defaultErrorMessage(exc))
         return ResponseEntity(ErrorDto(ErrorType.VALIDATION_ERROR, exc.localizedMessage), HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(MissingServletRequestParameterException::class)
     fun handleRequestParameterError(exc: MissingServletRequestParameterException): ResponseEntity<ErrorDto> {
-        logger.error("MissingServletRequestParameterException: '${exc.localizedMessage}'")
+        logger.error(defaultErrorMessage(exc))
         return ResponseEntity(ErrorDto(ErrorType.VALIDATION_ERROR, exc.localizedMessage), HttpStatus.BAD_REQUEST)
     }
+
+    private fun defaultErrorMessage(exc: Exception): String = "${exc::class.simpleName}: '${exc.localizedMessage}'"
 }

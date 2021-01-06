@@ -19,7 +19,7 @@ class JwtService(
 
     private val parser = Jwts.parserBuilder().setSigningKey(key).build()
 
-    private fun parseClaims(token: String): Claims {
+    fun parseClaims(token: String): Claims {
         return parser.parseClaimsJws(token).body
     }
 
