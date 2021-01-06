@@ -3,7 +3,6 @@ package com.localove
 import com.localove.api.ErrorDto
 import com.localove.api.ErrorType
 import com.localove.exceptions.NotFoundException
-import com.localove.exceptions.WrongPasswordException
 import com.localove.util.LoggerProperty
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -39,12 +38,6 @@ class ApplicationExceptionHandler {
     fun handleRequestParameterError(exc: MissingServletRequestParameterException): ResponseEntity<ErrorDto> {
         logger.error(defaultErrorMessage(exc))
         return ResponseEntity(ErrorDto(ErrorType.VALIDATION_ERROR, exc.localizedMessage), HttpStatus.BAD_REQUEST)
-    }
-
-    @ExceptionHandler(WrongPasswordException::class)
-    fun handleWrongPassword(exc: WrongPasswordException): ResponseEntity<ErrorDto> {
-        logger.error(defaultErrorMessage(exc))
-        return ResponseEntity(ErrorDto(ErrorType.WRONG_PASSWORD, exc.localizedMessage), HttpStatus.BAD_REQUEST)
     }
 
     private fun defaultErrorMessage(exc: Exception): String = "${exc::class.simpleName}: '${exc.localizedMessage}'"

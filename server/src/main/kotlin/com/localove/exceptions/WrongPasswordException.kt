@@ -1,5 +1,3 @@
 package com.localove.exceptions
 
-class WrongPasswordException(
-    message: String? = null
-): RuntimeException(message)
+class WrongPasswordException: RuntimeException("Wrong password")
