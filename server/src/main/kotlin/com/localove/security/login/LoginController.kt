@@ -5,6 +5,7 @@ import com.localove.api.edit.BaseProfileEditDto
 import com.localove.api.security.Credentials
 import com.localove.exceptions.FirstStartConfigRequiredException
 import com.localove.exceptions.UnconfirmedUserException
+import com.localove.exceptions.UnsupportedTypeException
 import com.localove.util.Response
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -34,7 +35,21 @@ class LoginController(
         avatar: MultipartFile,
         @RequestPart("userInfo")
         userInfo: BaseProfileEditDto
-    ) {
+    ): ResponseEntity<*> {
+        avatar.contentType ?: return Response.error(
+            ErrorType.VALIDATION_ERROR,
+            "Content type should be defined"
+        )
 
+        return try {
+            service.firstStartConfiguration(
+                avatar.bytes,
+                avatar.contentType!!,
+                userInfo
+            )
+            Response.ok()
+        } catch (exc: UnsupportedTypeException) {
+            Response.error(ErrorType.VALIDATION_ERROR, exc.localizedMessage)
+        }
     }
 }

@@ -4,6 +4,7 @@ import com.localove.exceptions.AlreadyExistsException
 import com.localove.exceptions.InvalidTokenException
 import com.localove.exceptions.NotFoundException
 import com.localove.exceptions.WrongPasswordException
+import com.localove.security.entities.Role
 import com.localove.security.entities.RoleRepository
 import com.localove.security.entities.User
 import com.localove.security.entities.UserRepository
@@ -49,12 +50,7 @@ class UserService(
         user.apply {
             password = passwordEncoder.encode(password)
             // TODO: расскоментить когда добавим логику почты
-//            val unconfirmedRole = roleRepository
-//                .findByName(Role.Name.UNCONFIRMED)
-//                .orElseThrow {
-//                    IllegalArgumentException("DB doesn't contain predefined role: UNCONFIRMED")
-//                }
-//            roles.add(unconfirmedRole)
+//            addRole(this, Role.Name.UNCONFIRMED)
             userRepository.save(this)
         }
     }
@@ -67,6 +63,18 @@ class UserService(
             throw WrongPasswordException()
         }
     }
+
+    fun removeRole(user: User, roleName: Role.Name) {
+        user.roles.removeIf { it.name == roleName }
+    }
+
+    fun addRole(user: User, roleName: Role.Name) {
+        user.roles.add(findRoleByName(roleName))
+    }
+
+    private fun findRoleByName(roleName: Role.Name) =
+        roleRepository.findByName(roleName)
+            ?: throw IllegalArgumentException("DB doesn't contain predefined role: UNCONFIRMED")
 
     @Transactional
     fun editPassword(newPassword: String, token: String) {

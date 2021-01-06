@@ -6,6 +6,7 @@ import com.localove.api.security.TokenDto
 import com.localove.exceptions.FirstStartConfigRequiredException
 import com.localove.exceptions.NotFoundException
 import com.localove.exceptions.UnconfirmedUserException
+import com.localove.pictures.PictureService
 import com.localove.security.UserService
 import com.localove.security.entities.Role
 import com.localove.security.entities.User
@@ -14,13 +15,13 @@ import com.localove.util.LoggerProperty
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.multipart.MultipartFile
 
 @Service
 class LoginService(
     private val userService: UserService,
-    private val bCryptPasswordEncoder: PasswordEncoder,
-    private val jwtService: JwtService
+    private val jwtService: JwtService,
+    private val pictureService: PictureService,
+    private val bCryptPasswordEncoder: PasswordEncoder
 ) {
     private val logger by LoggerProperty()
 
@@ -30,7 +31,7 @@ class LoginService(
 
         when {
             user.isUnconfirmed() -> throw UnconfirmedUserException("Unconfirmed")
-            user.isNewbie() -> throw FirstStartConfigRequiredException("Please pass the initial profile setup")
+            user.isNewcomer() -> throw FirstStartConfigRequiredException("Please pass the initial profile setup")
         }
 
         if (!bCryptPasswordEncoder.matches(credentials.password, user.password)) {
@@ -43,17 +44,25 @@ class LoginService(
         )
     }
 
+    @Transactional
     fun firstStartConfiguration(
-        avatar: MultipartFile,
-        userInfo: BaseProfileEditDto) {
+        avatarBytes: ByteArray,
+        avatarType: String,
+        userInfo: BaseProfileEditDto
+    ) {
+        pictureService.addPicture(avatarBytes, avatarType)
+        // apply userInfo
+        val currentUser = userService.getCurrentUser()
 
+        userService.removeRole(currentUser, Role.Name.NEWCOMER)
+        userService.addRole(currentUser, Role.Name.USER)
     }
 
     fun User.isUnconfirmed(): Boolean {
         return roles.any { it.name == Role.Name.UNCONFIRMED }
     }
 
-    fun User.isNewbie(): Boolean {
-        return roles.any { it.name == Role.Name.NEWBIE }
+    fun User.isNewcomer(): Boolean {
+        return roles.any { it.name == Role.Name.NEWCOMER }
     }
 }
