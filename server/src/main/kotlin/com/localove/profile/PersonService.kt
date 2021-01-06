@@ -2,9 +2,8 @@ package com.localove.profile
 
 import com.localove.entities.Person
 import com.localove.entities.PersonRepository
-import com.localove.exceptions.NotFoundException
 import com.localove.exceptions.InvalidUserException
-import com.localove.security.AuthorizedUserInfo
+import com.localove.exceptions.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,11 +19,15 @@ class PersonService(
             }
     }
 
-    fun getCurrentPerson() = getPerson(AuthorizedUserInfo.getPrincipal().id!!)
+    fun getCurrentPerson(): Person {
+        return personRepository.findCurrentUser()
+            ?: throw IllegalArgumentException("Not authorized")
+    }
 
     fun isLikedByCurrentPerson(person: Person): Boolean {
-        val currentPerson = getCurrentPerson()
-        return currentPerson.likedPersons.contains(person)
+        return getCurrentPerson()
+            .likedPersons
+            .contains(person)
     }
 
     @Transactional
