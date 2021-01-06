@@ -36,3 +36,13 @@ loca-love:
   jwt:
     secret: passssssssssssssssssssssswordddddddddddd
     expiration: 3h
+
+email:
+  #Временно
+  email-confirmation-url: http://example.org/
+  password-restore-url: http://example.org/
+  templates:
+    email-confirmation-template-file-path:
+      /static/templates/emailConfirmationMessage
+    password-restore-template-file-path:
+      /static/templates/passwordRestoreMessage
