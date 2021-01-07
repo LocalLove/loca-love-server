@@ -1,7 +1,6 @@
 package com.localove.profile
 
 import com.localove.api.ErrorType
-import com.localove.api.edit.BaseProfileEditDto
 import com.localove.api.user.Profile
 import com.localove.api.user.ProfileCard
 import com.localove.entities.Person
@@ -15,7 +14,7 @@ import java.time.LocalDate
 @RestController
 @RequestMapping("/user")
 class ProfileController(
-    private val personService: PersonService,
+    private val personService: PersonService
 ) {
     @GetMapping("/{userId}")
     fun getProfile(@PathVariable userId: Long): ResponseEntity<*> {

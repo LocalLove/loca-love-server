@@ -29,7 +29,7 @@ class ProfileEditController(
         }
     }
 
-    @PostMapping("user/edit/password")
+    @PostMapping("/user/edit/password")
     fun editPassword(@RequestBody newPasswordDto: NewPasswordDto): ResponseEntity<*> {
         passwordValidation.throwIfNotValid(newPasswordDto)
 
@@ -41,7 +41,7 @@ class ProfileEditController(
         }
     }
 
-    @PostMapping("user/check-password")
+    @PostMapping("/user/check-password")
     fun checkPassword(@RequestBody passwordDto: PasswordDto): ResponseEntity<*> {
         return try {
             Response.ok(TokenDto(userService.checkPassword(passwordDto.password)))
@@ -62,7 +62,7 @@ class ProfileEditController(
         }
     }
 
-    @PutMapping("user/edit")
+    @PutMapping("/user/edit")
     fun baseEditProfile(@RequestBody editProfileDto: BaseProfileEditDto): ResponseEntity<*> {
         return try {
             personService.editProfile(editProfileDto)
@@ -72,7 +72,7 @@ class ProfileEditController(
         }
     }
 
-    @PostMapping("user/edit/email")
+    @PostMapping("/user/edit/email")
     fun editEmail(@RequestBody emailDto: EmailDto): ResponseEntity<*> {
         return try {
             userService.editEmail(emailDto.email)
