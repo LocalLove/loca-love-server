@@ -5,8 +5,8 @@ import com.localove.api.user.Profile
 import com.localove.api.user.ProfileCard
 import com.localove.entities.Person
 import com.localove.exceptions.InvalidUserException
+import com.localove.exceptions.NotFoundException
 import com.localove.util.Response
-import javassist.NotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
@@ -33,7 +33,6 @@ class ProfileController(
             Response.error(ErrorType.NOT_FOUND, "User with such id not found")
         }
     }
-
 
     @PostMapping("/{userId}/like")
     fun likeUser(@PathVariable userId: Long): ResponseEntity<*> {
@@ -68,4 +67,3 @@ class ProfileController(
         avatarId = avatar?.id!!
     )
 }
-
