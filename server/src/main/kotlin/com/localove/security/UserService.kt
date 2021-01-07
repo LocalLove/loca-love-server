@@ -81,7 +81,7 @@ class UserService(
     @Transactional
     fun restorePassword(email: String){
         if (userRepository.existsByEmail(email)){
-            val token = tokenService.fillToken(emailTokenRepository, userRepository.findByLoginOrEmail(email,email).get(), EmailToken())
+            val token = tokenService.fillToken(emailTokenRepository, userRepository.findByEmail(email).get(), EmailToken())
             emailService.sendPasswordRestore(email, token.value)
         } else {
             throw NotExistEmailException("This email is not registered")
