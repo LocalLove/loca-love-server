@@ -30,7 +30,10 @@ class UserService(
             }
     }
 
-    fun getCurrentUser(): User = AuthorizedUserInfo.getPrincipal()
+    fun getCurrentUser(): User {
+        return userRepository.findCurrentUser()
+            ?: throw IllegalArgumentException("Not authorized")
+    }
 
     fun findByLoginOrEmail(loginOrEmail: String): User {
         return userRepository.findByLoginOrEmail(loginOrEmail, loginOrEmail)
@@ -57,6 +60,13 @@ class UserService(
     }
 
     @Transactional
+    fun firstStartConfiguration() {
+        val currentUser = getCurrentUser()
+        removeRole(currentUser, Role.Name.NEWCOMER)
+        addRole(currentUser, Role.Name.USER)
+    }
+
+    @Transactional
     fun editEmail(newEmail: String) {
         val currentUser = getCurrentUser()
         if (userRepository.existsByEmail(newEmail)) {
@@ -76,14 +86,6 @@ class UserService(
         } else {
             throw WrongPasswordException()
         }
-    }
-
-    fun removeRole(user: User, roleName: Role.Name) {
-        user.roles.removeIf { it.name == roleName }
-    }
-
-    fun addRole(user: User, roleName: Role.Name) {
-        user.roles.add(findRoleByName(roleName))
     }
 
     @Transactional
@@ -109,4 +111,12 @@ class UserService(
     private fun findRoleByName(roleName: Role.Name) =
         roleRepository.findByName(roleName)
             ?: throw IllegalArgumentException("DB doesn't contain predefined role: UNCONFIRMED")
+
+    private fun removeRole(user: User, roleName: Role.Name) {
+        user.roles.removeIf { it.name == roleName }
+    }
+
+    private fun addRole(user: User, roleName: Role.Name) {
+        user.roles.add(findRoleByName(roleName))
+    }
 }
