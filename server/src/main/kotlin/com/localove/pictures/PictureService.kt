@@ -2,12 +2,16 @@ package com.localove.pictures
 
 import com.localove.entities.Picture
 import com.localove.entities.PictureRepository
+import com.localove.exceptions.AccessDeniedException
+import com.localove.exceptions.LastPictureDeletionException
 import com.localove.exceptions.NotFoundException
 import com.localove.exceptions.UnsupportedTypeException
 import com.localove.profile.PersonService
-import org.hibernate.annotations.NotFound
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
+
+private const val MIN_PICTURES_NUMBER = 1
 
 @Service
 class PictureService(
@@ -15,13 +19,16 @@ class PictureService(
     private val personService: PersonService,
     private val properties: PicturesProperties
 ) {
+
+    @Transactional
     fun addPicture(bytes: ByteArray, type: String) {
         if (!isCorrectType(type)) {
             throw UnsupportedTypeException(
                 "Wrong type: $type. Should be one of ${properties.supportedTypes}"
             )
         }
-        pictureRepository.save(
+
+        val picture = pictureRepository.save(
             Picture(
                 owner = personService.getCurrentPerson(),
                 lastUpdateTime = LocalDateTime.now(),
@@ -29,6 +36,8 @@ class PictureService(
                 bytes = bytes
             )
         )
+
+        changeProfilePhoto(picture.id!!)
     }
 
     fun getPicture(pictureId: Long): Picture {
@@ -39,7 +48,36 @@ class PictureService(
             }
     }
 
+    @Transactional
+    fun changeProfilePhoto(pictureId: Long) {
+        val picture = getPictureAndCheckOwnership(pictureId)
+        picture.lastUpdateTime = LocalDateTime.now()
+        picture.owner.avatar = picture
+    }
+
+    @Transactional
+    fun deletePicture(pictureId: Long) {
+        val picture = getPictureAndCheckOwnership(pictureId)
+        if (picture.owner.pictures.size <= MIN_PICTURES_NUMBER) {
+            throw LastPictureDeletionException("Specified photo is the last one owned by current user")
+        }
+
+        pictureRepository.delete(picture)
+    }
+
+    private fun getPictureAndCheckOwnership(pictureId: Long): Picture {
+        val picture = getPicture(pictureId)
+        val currentPerson = personService.getCurrentPerson()
+
+        if (picture.owner != currentPerson) {
+            throw AccessDeniedException("Current user doesn't own specified picture")
+        }
+
+        return picture
+    }
+
     private fun isCorrectType(type: String): Boolean {
         return properties.supportedTypes.contains(type)
     }
+
 }

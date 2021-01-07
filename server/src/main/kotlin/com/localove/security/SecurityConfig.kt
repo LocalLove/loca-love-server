@@ -1,5 +1,6 @@
 package com.localove.security
 
+import com.localove.security.entities.Role
 import com.localove.security.jwt.JwtAuthenticationProvider
 import com.localove.security.jwt.JwtRequestFilter
 import org.springframework.beans.factory.annotation.Autowired
@@ -40,11 +41,9 @@ class SecurityConfig(
             .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            .antMatchers("/user/**").authenticated()
-            .antMatchers("/pictures/**").authenticated()
-//            .antMatchers("/profile").hasAuthority("DEFAULT")
-//            .antMatchers("/api/**").hasAuthority("DEFAULT")
-//            .antMatchers("/api/v1/users/**").hasAuthority("ADMIN")
+            .antMatchers("/user/first-start").hasAuthority(Role.Name.NEWCOMER.name)
+            .antMatchers("/user/**").hasAuthority(Role.Name.USER.name)
+            .antMatchers("/pictures/**").hasAuthority(Role.Name.USER.name)
     }
 
     private val corsConfigurationSource: CorsConfigurationSource =

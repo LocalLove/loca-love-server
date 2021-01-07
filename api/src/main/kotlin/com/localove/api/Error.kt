@@ -10,7 +10,10 @@ enum class ErrorType {
     EMAIL_EXIST,
     EMAIL_NOT_EXIST,
     WRONG_PASSWORD,
-    INVALID_USER
+    INVALID_USER,
+    LAST_PICTURE_DELETION,
+    UNCONFIRMED,
+    FIRST_START_CONFIG_REQUIRED,
 }
 
 data class ErrorDto(

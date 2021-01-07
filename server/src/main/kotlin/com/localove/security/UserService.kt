@@ -1,6 +1,9 @@
 package com.localove.security
 
-import com.localove.exceptions.*
+import com.localove.exceptions.AlreadyExistsException
+import com.localove.exceptions.InvalidTokenException
+import com.localove.exceptions.NotFoundException
+import com.localove.exceptions.WrongPasswordException
 import com.localove.security.email.SecurityEmailService
 import com.localove.security.entities.*
 import com.localove.security.jwt.JwtService
@@ -14,11 +17,10 @@ class UserService(
     private val jwtService: JwtService,
     private val tokenService: TokenService,
     private val emailService: SecurityEmailService,
+    private val roleManagementService: RoleManagementService,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val roleRepository: RoleRepository,
-    private val emailChangeTokenRepository: EmailChangeTokenRepository,
-    private val emailTokenRepository: EmailTokenRepository
+    private val emailChangeTokenRepository: EmailChangeTokenRepository
 ) {
     fun findById(id: Long): User {
         return userRepository
@@ -28,7 +30,10 @@ class UserService(
             }
     }
 
-    fun getCurrentUser(): User = AuthorizedUserInfo.getPrincipal()
+    fun getCurrentUser(): User {
+        return userRepository.findCurrentUser()
+            ?: throw IllegalArgumentException("Not authorized")
+    }
 
     fun findByLoginOrEmail(loginOrEmail: String): User {
         return userRepository.findByLoginOrEmail(loginOrEmail, loginOrEmail)
@@ -49,12 +54,16 @@ class UserService(
 
         user.apply {
             password = passwordEncoder.encode(password)
-            val unconfirmedRole = roleRepository
-                .findByName(Role.Name.UNCONFIRMED) ?:
-                throw IllegalArgumentException("DB doesn't contain predefined role: UNCONFIRMED")
-            roles.add(unconfirmedRole)
+            roleManagementService.addRoleToUser(this, Role.Name.UNCONFIRMED)
             userRepository.save(this)
         }
+    }
+
+    @Transactional
+    fun firstStartConfiguration() {
+        val user = getCurrentUser()
+        roleManagementService.removeRoleFromUser(user, Role.Name.NEWCOMER)
+        roleManagementService.addRoleToUser(user, Role.Name.USER)
     }
 
     @Transactional

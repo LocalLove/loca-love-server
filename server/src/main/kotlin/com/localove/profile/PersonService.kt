@@ -6,11 +6,10 @@ import com.localove.exceptions.InvalidUserException
 import com.localove.exceptions.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.lang.IllegalArgumentException
 
 @Service
 class PersonService(
-    private val personRepository: PersonRepository
+    private val personRepository: PersonRepository,
 ) {
     fun getPerson(userId: Long): Person {
         return personRepository
@@ -42,9 +41,9 @@ class PersonService(
 
         if (currentPerson.likedPersons.contains(otherPerson)) {
             currentPerson.likedPersons.remove(otherPerson)
-        } else {
-            currentPerson.likedPersons.add(otherPerson)
+            return
         }
-    }
 
+        currentPerson.likedPersons.add(otherPerson)
+    }
 }
