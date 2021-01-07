@@ -117,7 +117,7 @@ class ProfileEditController(
         }
     }
 
-    @PostMapping("password-restore")
+    @PostMapping("/password-restore")
     fun passwordRestoreGetEmail(@RequestParam email: String): ResponseEntity<*>{
         return try{
             userService.restorePassword(email)
