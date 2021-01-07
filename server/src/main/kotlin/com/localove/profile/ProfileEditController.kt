@@ -29,6 +29,12 @@ class ProfileEditController(
         }
     }
 
+    private val emailValidation = Validation<EmailDto> {
+        EmailDto::email {
+            run(Validations.emailValidation)
+        }
+    }
+
     @PostMapping("/user/edit/password")
     fun editPassword(@RequestBody newPasswordDto: NewPasswordDto): ResponseEntity<*> {
         passwordValidation.throwIfNotValid(newPasswordDto)
@@ -74,6 +80,8 @@ class ProfileEditController(
 
     @PostMapping("/user/edit/email")
     fun editEmail(@RequestBody emailDto: EmailDto): ResponseEntity<*> {
+        emailValidation.throwIfNotValid(emailDto)
+
         return try {
             userService.editEmail(emailDto.email)
             Response.ok()
