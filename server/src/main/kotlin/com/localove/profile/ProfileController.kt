@@ -5,8 +5,8 @@ import com.localove.api.user.Profile
 import com.localove.api.user.ProfileCard
 import com.localove.entities.Person
 import com.localove.exceptions.InvalidUserException
+import com.localove.exceptions.NotFoundException
 import com.localove.util.Response
-import javassist.NotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
