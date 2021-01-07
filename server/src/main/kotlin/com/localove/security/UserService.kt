@@ -1,5 +1,6 @@
 package com.localove.security
 
+import com.localove.api.edit.NewPasswordDto
 import com.localove.exceptions.*
 import com.localove.security.email.SecurityEmailService
 import com.localove.security.entities.*
@@ -114,5 +115,13 @@ class UserService(
             UUID.fromString(token)
         )!!.email
         getCurrentUser().email = newEmail
+    }
+
+    @Transactional
+    fun confirmNewPassword(newPasswordDto: NewPasswordDto) {
+        tokenService.validateToken(emailTokenRepository, newPasswordDto.token)
+        val user = emailTokenRepository.findByValue(UUID.fromString(newPasswordDto.token))!!.user
+        val newPassword = newPasswordDto.password
+        user.password = newPassword
     }
 }
