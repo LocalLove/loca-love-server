@@ -34,7 +34,6 @@ class ProfileController(
         }
     }
 
-
     @PostMapping("/{userId}/like")
     fun likeUser(@PathVariable userId: Long): ResponseEntity<*> {
         return try {
@@ -68,4 +67,3 @@ class ProfileController(
         avatarId = avatar?.id!!
     )
 }
-
