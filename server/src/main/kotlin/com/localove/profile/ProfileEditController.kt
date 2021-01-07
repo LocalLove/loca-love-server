@@ -8,6 +8,7 @@ import com.localove.api.edit.PasswordDto
 import com.localove.api.security.TokenDto
 import com.localove.exceptions.AlreadyExistsException
 import com.localove.exceptions.InvalidTokenException
+import com.localove.exceptions.UnsupportedTypeException
 import com.localove.exceptions.WrongPasswordException
 import com.localove.security.UserService
 import com.localove.util.Response
@@ -17,11 +18,12 @@ import io.konform.validation.Validation
 import javassist.NotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 class ProfileEditController(
     private val userService: UserService,
-    private val personService: PersonService
+    private val personEditService: PersonEditService
 ) {
     private val passwordValidation = Validation<NewPasswordDto> {
         NewPasswordDto::password {
@@ -71,10 +73,34 @@ class ProfileEditController(
     @PutMapping("/user/edit")
     fun baseEditProfile(@RequestBody editProfileDto: BaseProfileEditDto): ResponseEntity<*> {
         return try {
-            personService.editProfile(editProfileDto)
+            personEditService.editProfile(editProfileDto)
             Response.ok()
         } catch (exc: NotFoundException) {
             Response.error(ErrorType.NOT_FOUND, "User with such id not found")
+        }
+    }
+
+    @PostMapping("/user/first-start")
+    fun firstStartConfiguration(
+        @RequestPart("avatar")
+        avatar: MultipartFile,
+        @RequestPart("userInfo")
+        userInfo: BaseProfileEditDto
+    ): ResponseEntity<*> {
+        avatar.contentType ?: return Response.error(
+            ErrorType.VALIDATION_ERROR,
+            "Content type should be defined"
+        )
+
+        return try {
+            personEditService.firstStartConfiguration(
+                avatar.bytes,
+                avatar.contentType!!,
+                userInfo
+            )
+            Response.ok()
+        } catch (exc: UnsupportedTypeException) {
+            Response.error(ErrorType.VALIDATION_ERROR, exc.localizedMessage)
         }
     }
 

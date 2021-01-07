@@ -2,7 +2,9 @@ package com.localove.security.entities
 
 import com.localove.Identifiable
 import com.localove.api.user.Gender
+import com.localove.entities.Person
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
 import java.util.*
@@ -33,7 +35,6 @@ class User(
 ) : Identifiable() {
 
     @ManyToMany(
-        cascade = [CascadeType.PERSIST, CascadeType.MERGE],
         fetch = FetchType.EAGER
     )
     @JoinTable(
@@ -52,4 +53,7 @@ interface UserRepository : JpaRepository<User, Long> {
     fun existsByEmail(email: String): Boolean
 
     fun existsByLogin(login: String): Boolean
+
+    @Query("select u from User u where u.id = ?#{principal?.id}")
+    fun findCurrentUser(): User?
 }
