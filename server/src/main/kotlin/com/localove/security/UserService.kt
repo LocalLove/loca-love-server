@@ -84,7 +84,7 @@ class UserService(
             val token = tokenService.fillToken(emailTokenRepository, userRepository.findByEmail(email).get(), EmailToken())
             emailService.sendPasswordRestore(email, token.value)
         } else {
-            throw NotExistEmailException("This email is not registered")
+            throw EmailNotExistException("This email is not registered")
         }
     }
 
@@ -121,7 +121,6 @@ class UserService(
     fun confirmNewPassword(newPasswordDto: NewPasswordDto) {
         tokenService.validateToken(emailTokenRepository, newPasswordDto.token)
         val user = emailTokenRepository.findByValue(UUID.fromString(newPasswordDto.token))!!.user
-        val newPassword = newPasswordDto.password
-        user.password = newPassword
+        user.password = newPasswordDto.password
     }
 }

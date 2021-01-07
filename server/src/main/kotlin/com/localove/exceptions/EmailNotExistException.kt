@@ -1,5 +1,5 @@
 package com.localove.exceptions
 
-class NotExistEmailException (
+class EmailNotExistException (
     message: String? = null
 ): RuntimeException(message)

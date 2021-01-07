@@ -118,7 +118,7 @@ class ProfileEditController(
         return try{
             userService.restorePassword(email)
             Response.ok()
-        } catch (exc: NotExistEmailException){
+        } catch (exc: EmailNotExistException){
             Response.error(ErrorType.EMAIL_NOT_EXIST, exc.localizedMessage)
         }
     }
