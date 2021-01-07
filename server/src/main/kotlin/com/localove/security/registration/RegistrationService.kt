@@ -30,7 +30,7 @@ internal class RegistrationService(
     @Transactional
     fun confirmEmail(token: String) {
         val user = tokenService.validateToken(emailTokenRepository, token)
-        roleManagementService.removeRoleFromUser(user.id!!, Role.Name.UNCONFIRMED)
-        roleManagementService.addRoleToUser(user.id!!, Role.Name.NEWCOMER)
+        roleManagementService.removeRoleFromUser(user, Role.Name.UNCONFIRMED)
+        roleManagementService.addRoleToUser(user, Role.Name.NEWCOMER)
     }
 }

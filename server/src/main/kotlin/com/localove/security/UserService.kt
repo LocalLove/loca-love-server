@@ -17,9 +17,9 @@ class UserService(
     private val jwtService: JwtService,
     private val tokenService: TokenService,
     private val emailService: SecurityEmailService,
+    private val roleManagementService: RoleManagementService,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val roleRepository: RoleRepository,
     private val emailChangeTokenRepository: EmailChangeTokenRepository
 ) {
     fun findById(id: Long): User {
@@ -54,16 +54,16 @@ class UserService(
 
         user.apply {
             password = passwordEncoder.encode(password)
-            addRole(this, Role.Name.UNCONFIRMED)
+            roleManagementService.addRoleToUser(this, Role.Name.UNCONFIRMED)
             userRepository.save(this)
         }
     }
 
     @Transactional
     fun firstStartConfiguration() {
-        val currentUser = getCurrentUser()
-        removeRole(currentUser, Role.Name.NEWCOMER)
-        addRole(currentUser, Role.Name.USER)
+        val user = getCurrentUser()
+        roleManagementService.removeRoleFromUser(user, Role.Name.NEWCOMER)
+        roleManagementService.addRoleToUser(user, Role.Name.USER)
     }
 
     @Transactional
@@ -106,17 +106,5 @@ class UserService(
             UUID.fromString(token)
         )!!.email
         getCurrentUser().email = newEmail
-    }
-
-    private fun findRoleByName(roleName: Role.Name) =
-        roleRepository.findByName(roleName)
-            ?: throw IllegalArgumentException("DB doesn't contain predefined role: UNCONFIRMED")
-
-    private fun removeRole(user: User, roleName: Role.Name) {
-        user.roles.removeIf { it.name == roleName }
-    }
-
-    private fun addRole(user: User, roleName: Role.Name) {
-        user.roles.add(findRoleByName(roleName))
     }
 }
