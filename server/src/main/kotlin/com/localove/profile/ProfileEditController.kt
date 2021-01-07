@@ -7,6 +7,7 @@ import com.localove.api.edit.PasswordDto
 import com.localove.api.security.TokenDto
 import com.localove.exceptions.AlreadyExistsException
 import com.localove.exceptions.InvalidTokenException
+import com.localove.exceptions.NotExistEmailException
 import com.localove.exceptions.WrongPasswordException
 import com.localove.security.UserService
 import com.localove.util.Response
@@ -69,6 +70,16 @@ class ProfileEditController(
             Response.ok()
         } catch (exc: AlreadyExistsException) {
             Response.error(ErrorType.EMAIL_EXIST, exc.localizedMessage)
+        }
+    }
+
+    @PostMapping("password-restore")
+    fun passwordRestoreGetEmail(@RequestParam email: String): ResponseEntity<*>{
+        return try{
+            userService.restorePassword(email)
+            Response.ok()
+        } catch (exc: NotExistEmailException){
+            Response.error(ErrorType.EMAIL_NOT_EXIST, exc.localizedMessage)
         }
     }
 }

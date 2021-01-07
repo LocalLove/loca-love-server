@@ -1,9 +1,6 @@
 package com.localove.security
 
-import com.localove.exceptions.AlreadyExistsException
-import com.localove.exceptions.InvalidTokenException
-import com.localove.exceptions.NotFoundException
-import com.localove.exceptions.WrongPasswordException
+import com.localove.exceptions.*
 import com.localove.security.email.SecurityEmailService
 import com.localove.security.entities.*
 import com.localove.security.jwt.JwtService
@@ -20,7 +17,8 @@ class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val roleRepository: RoleRepository,
-    private val emailChangeTokenRepository: EmailChangeTokenRepository
+    private val emailChangeTokenRepository: EmailChangeTokenRepository,
+    private val emailTokenRepository: EmailTokenRepository
 ) {
     fun findById(id: Long): User {
         return userRepository
@@ -69,6 +67,17 @@ class UserService(
             emailService.sendEmailConfirmation(newEmail, token.value)
         } else {
             throw AlreadyExistsException(AlreadyExistsException.Property.EMAIL)
+        }
+    }
+
+    @Transactional
+    fun restorePassword(email: String){
+        val currentUser = getCurrentUser()
+        if (userRepository.existsByEmail(email)){
+            val token = tokenService.fillToken(emailTokenRepository, currentUser, EmailToken())
+            emailService.sendPasswordRestore(email, token.value)
+        } else {
+            throw NotExistEmailException("This email is not registered")
         }
     }
 
