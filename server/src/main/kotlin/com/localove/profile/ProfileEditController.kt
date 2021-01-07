@@ -6,10 +6,7 @@ import com.localove.api.edit.EmailDto
 import com.localove.api.edit.NewPasswordDto
 import com.localove.api.edit.PasswordDto
 import com.localove.api.security.TokenDto
-import com.localove.exceptions.AlreadyExistsException
-import com.localove.exceptions.InvalidTokenException
-import com.localove.exceptions.UnsupportedTypeException
-import com.localove.exceptions.WrongPasswordException
+import com.localove.exceptions.*
 import com.localove.security.UserService
 import com.localove.util.Response
 import com.localove.util.Validations
@@ -114,5 +111,28 @@ class ProfileEditController(
         } catch (exc: AlreadyExistsException) {
             Response.error(ErrorType.EMAIL_EXIST, exc.localizedMessage)
         }
+    }
+
+    @PostMapping("/password-restore")
+    fun passwordRestoreGetEmail(@RequestParam email: String): ResponseEntity<*>{
+        return try{
+            userService.restorePassword(email)
+            Response.ok()
+        } catch (exc: EmailNotExistException){
+            Response.error(ErrorType.EMAIL_NOT_EXIST, exc.localizedMessage)
+        }
+    }
+
+    @PostMapping("/confirm-new-password")
+    fun confirmNewPassword(@RequestBody newPasswordDto: NewPasswordDto): ResponseEntity<*>{
+        return try{
+            userService.confirmNewPassword(newPasswordDto)
+            Response.ok()
+        } catch (exc: ValidationException) {
+            Response.error(ErrorType.VALIDATION_ERROR, exc.localizedMessage)
+        } catch (exc: InvalidTokenException) {
+            Response.error(ErrorType.INVALID_TOKEN, exc.localizedMessage)
+        }
+
     }
 }

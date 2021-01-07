@@ -1,9 +1,7 @@
 package com.localove.security
 
-import com.localove.exceptions.AlreadyExistsException
-import com.localove.exceptions.InvalidTokenException
-import com.localove.exceptions.NotFoundException
-import com.localove.exceptions.WrongPasswordException
+import com.localove.api.edit.NewPasswordDto
+import com.localove.exceptions.*
 import com.localove.security.email.SecurityEmailService
 import com.localove.security.entities.*
 import com.localove.security.jwt.JwtService
@@ -20,7 +18,8 @@ class UserService(
     private val roleManagementService: RoleManagementService,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val emailChangeTokenRepository: EmailChangeTokenRepository
+    private val emailChangeTokenRepository: EmailChangeTokenRepository,
+    private val emailTokenRepository: EmailTokenRepository
 ) {
     fun findById(id: Long): User {
         return userRepository
@@ -79,6 +78,16 @@ class UserService(
         }
     }
 
+    @Transactional
+    fun restorePassword(email: String){
+        if (userRepository.existsByEmail(email)){
+            val token = tokenService.fillToken(emailTokenRepository, userRepository.findByEmail(email).get(), EmailToken())
+            emailService.sendPasswordRestore(email, token.value)
+        } else {
+            throw EmailNotExistException("This email is not registered")
+        }
+    }
+
     fun checkPassword(oldPassword: String): String {
         val currentUser = getCurrentUser()
         return if (passwordEncoder.matches(oldPassword, currentUser.password)) {
@@ -106,5 +115,12 @@ class UserService(
             UUID.fromString(token)
         )!!.email
         getCurrentUser().email = newEmail
+    }
+
+    @Transactional
+    fun confirmNewPassword(newPasswordDto: NewPasswordDto) {
+        tokenService.validateToken(emailTokenRepository, newPasswordDto.token)
+        val user = emailTokenRepository.findByValue(UUID.fromString(newPasswordDto.token))!!.user
+        user.password = newPasswordDto.password
     }
 }
