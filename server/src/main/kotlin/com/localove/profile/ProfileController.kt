@@ -46,6 +46,15 @@ class ProfileController(
         }
     }
 
+    @GetMapping("/profile")
+    fun getProfile(): ResponseEntity<*> {
+        return try{
+            Response.ok(personService.getCurrentPerson().toProfile())
+        } catch (exc: IllegalArgumentException){
+            Response.error(ErrorType.ACCESS_DENIED, exc.localizedMessage)
+        }
+    }
+
     fun Person.toProfile() = Profile(
         id = id!!,
         age = birthDate.until(LocalDate.now()).years,

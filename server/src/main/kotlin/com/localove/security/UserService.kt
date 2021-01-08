@@ -121,6 +121,6 @@ class UserService(
     fun confirmNewPassword(newPasswordDto: NewPasswordDto) {
         tokenService.validateToken(emailTokenRepository, newPasswordDto.token)
         val user = emailTokenRepository.findByValue(UUID.fromString(newPasswordDto.token))!!.user
-        user.password = newPasswordDto.password
+        user.password = passwordEncoder.encode(newPasswordDto.password)
     }
 }
